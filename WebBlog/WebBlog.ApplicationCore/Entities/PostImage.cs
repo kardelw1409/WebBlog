@@ -5,8 +5,8 @@ using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
 namespace WebBlog.ApplicationCore.Entities
 {
-    public class AvatarImage : ImageOfApp
+    public class PostImage : ImageOfApp
     {
-
+        public byte[] ResizeImage { get; set; }
     }
 }

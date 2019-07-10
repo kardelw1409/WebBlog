@@ -13,9 +13,13 @@ namespace WebBlog.ApplicationCore.Entities
         
         public DateTime CreateTime { get; set; }
 
-        public int PostId { get; set; }
+        public DateTime UpdateTime { get; set; }
+
+        public int PostImageId { get; set; }
 
         public int AuthorId { get; set; }
+
+        public int CategoryId { get; set; }
 
     }
 }
