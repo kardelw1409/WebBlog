@@ -8,5 +8,7 @@ namespace WebBlog.ApplicationCore.Entities
     public class PostImage : ImageOfApp
     {
         public byte[] ResizeImage { get; set; }
+
+        public ICollection<Post> Posts { get; set; } 
     }
 }

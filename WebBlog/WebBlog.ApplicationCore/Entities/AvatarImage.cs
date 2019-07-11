@@ -7,6 +7,6 @@ namespace WebBlog.ApplicationCore.Entities
 {
     public class AvatarImage : ImageOfApp
     {
-
+        public ICollection<Author> Authors { get; set; }
     }
 }

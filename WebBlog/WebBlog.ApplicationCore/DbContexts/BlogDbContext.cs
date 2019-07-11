@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.ApplicationCore.Entities;
 
-namespace WebBlog.Infrastructure.DbContexts
+namespace WebBlog.ApplicationCore.DbContexts
 {
     public class BlogDbContext : DbContext
     {

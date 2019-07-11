@@ -7,14 +7,13 @@ using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
 namespace WebBlog.ApplicationCore.Interfaces
 {
-    public interface IRepository<TEntity> : IDisposable 
+    public interface IMainRepository<TEntity> : IDisposable 
         where TEntity : Entity
     {
         Task Create(TEntity entity);
         Task<TEntity> FindById(int id);
         Task<IEnumerable<TEntity>> GetAll();
-        Task<IEnumerable<TEntity>> Get(Func<TEntity, bool> predicate);
         Task<TEntity> Remove(int id);
-        Task Update(TEntity entity);
+
     }
 }

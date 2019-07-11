@@ -1,4 +1,5 @@
-﻿using WebBlog.ApplicationCore.Entities.AbstractEntities;
+﻿using System.Collections.Generic;
+using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
 namespace WebBlog.ApplicationCore.Entities
 {
@@ -7,5 +8,8 @@ namespace WebBlog.ApplicationCore.Entities
         public string CategoryName { get; set; }
 
         public string Discraption { get; set; }
+
+        public ICollection<Author> Authors { get; set; }
+        public ICollection<Post> Posts { get; set; }
     }
 }

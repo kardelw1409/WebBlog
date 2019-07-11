@@ -1,32 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
-namespace WebBlog.ApplicationCore.Entities
+namespace WebBlog.Infrastructure.DTO
 {
-    public class Post : Entity
+    public class PostDTO
     {
         public string Title { get; set; }
 
         public string Content { get; set; }
-        
+
         public DateTime CreateTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
 
-
         public int PostImageId { get; set; }
-        public PostImage PostImage { get; set; }
-
 
         public int AuthorId { get; set; }
-        public Author Author { get; set; }
-
 
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
-
-        public ICollection<CommentOfPost> CommentOfPosts { get; set; }
     }
 }

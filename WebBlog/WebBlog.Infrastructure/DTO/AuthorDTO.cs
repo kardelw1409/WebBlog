@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
-using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
-namespace WebBlog.ApplicationCore.Entities
+namespace WebBlog.Infrastructure.DTO
 {
-    public class Author : Entity
+    public class AuthorDTO
     {
         public string Nickname { get; set; }
 
-        [EmailAddress]
         public string Email { get; set; }
 
         public string FirstName { get; set; }
@@ -19,16 +16,8 @@ namespace WebBlog.ApplicationCore.Entities
 
         public DateTime Created { get; set; }
 
-
         public int PriorityCategoryId { get; set; }
-        public Category Category { get; set; }
-        
 
         public int AvatarImageId { get; set; }
-        public AvatarImage AvatarImage { get; set; }
-
-
-        public ICollection<Post> Posts { get; set; }
-
     }
 }
