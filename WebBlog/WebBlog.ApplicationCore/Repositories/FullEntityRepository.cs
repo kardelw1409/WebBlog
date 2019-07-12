@@ -11,7 +11,7 @@ using WebBlog.ApplicationCore.DbContexts;
 
 namespace WebBlog.ApplicationCore.Repositories
 {
-    public abstract class FullEntityRepository<TEntity> : EntityRepository<TEntity>, IAdditionalRepository<TEntity>
+    public abstract class FullEntityRepository<TEntity> : EntityRepository<TEntity>, IFullRepository<TEntity>
         where TEntity : Entity
     {
 

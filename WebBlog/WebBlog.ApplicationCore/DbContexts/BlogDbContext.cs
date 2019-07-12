@@ -19,6 +19,7 @@ namespace WebBlog.ApplicationCore.DbContexts
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<CommentOfPost> CommentOfPosts { get; set; }
         public DbSet<Post> Posts { get; set; }
- 
+
+
     }
 }

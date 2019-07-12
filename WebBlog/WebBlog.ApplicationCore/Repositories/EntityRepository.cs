@@ -19,7 +19,7 @@ namespace WebBlog.ApplicationCore.Repositories
         }
         public async Task Create(TEntity entity)
         {
-            dbContext.Set<TEntity>().Add(entity);
+            await dbContext.Set<TEntity>().AddAsync(entity);
             await dbContext.SaveChangesAsync();
         }
 
@@ -55,5 +55,6 @@ namespace WebBlog.ApplicationCore.Repositories
         {
             dbContext.Dispose();
         }
+
     }
 }
