@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
 using WebBlog.ApplicationCore.Interfaces;
 using WebBlog.ApplicationCore.Repositories;
@@ -35,12 +37,22 @@ namespace WebBlog.Web
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddScoped<IFullRepository<Author>, AuthorRepository>();
+
+            var connection = Configuration.GetConnectionString("BlogDbContext");
+            services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(connection));
+
+            services.AddScoped<IMainRepository<Category>, CategoryRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<BlogDbContext>();
+                context.Database.EnsureCreated();
+            }
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

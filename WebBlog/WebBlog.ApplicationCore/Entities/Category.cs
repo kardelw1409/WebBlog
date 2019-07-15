@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
 namespace WebBlog.ApplicationCore.Entities

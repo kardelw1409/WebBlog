@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.ApplicationCore.Entities;
 
 namespace WebBlog.ApplicationCore.DbContexts
 {
-    public class BlogDbContext : DbContext
+    public class BlogDbContext : IdentityDbContext<Author>
     {
         public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options)
         {
@@ -19,7 +20,12 @@ namespace WebBlog.ApplicationCore.DbContexts
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<CommentOfPost> CommentOfPosts { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
 
     }
 }

@@ -11,9 +11,9 @@ namespace WebBlog.ApplicationCore.Interfaces
         where TEntity : Entity
     {
         Task Create(TEntity entity);
-        Task<TEntity> FindById(int id);
+        Task<TEntity> FindById(int? id);
         Task<IEnumerable<TEntity>> GetAll();
-        Task<TEntity> Remove(int id);
+        Task<TEntity> Remove(int? id);
 
     }
 }

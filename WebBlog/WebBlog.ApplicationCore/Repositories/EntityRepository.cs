@@ -23,7 +23,7 @@ namespace WebBlog.ApplicationCore.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<TEntity> Remove(int id)
+        public async Task<TEntity> Remove(int? id)
         {
             /*var entityItem = DbContext.Set<TEntity>().Where(p => p.Id == entity.Id).FirstOrDefault();
             if (entityItem != null)
@@ -41,7 +41,7 @@ namespace WebBlog.ApplicationCore.Repositories
             return entityItem;
         }
 
-        public async Task<TEntity> FindById(int id)
+        public async Task<TEntity> FindById(int? id)
         {
             return await dbContext.Set<TEntity>().FindAsync(id);
         }

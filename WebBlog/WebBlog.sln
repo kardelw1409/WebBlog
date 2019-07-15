@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1A803365-4795-44E0-BDD0-E179A018DB13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBlog.ApplicationCore", "WebBlog.ApplicationCore\WebBlog.ApplicationCore.csproj", "{DBB39501-E572-4313-ACC7-CF945A2295F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebBlog.ApplicationCore", "WebBlog.ApplicationCore\WebBlog.ApplicationCore.csproj", "{DBB39501-E572-4313-ACC7-CF945A2295F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBlog.Web", "WebBlog.Web\WebBlog.Web.csproj", "{5233FCD4-77B0-4E4B-922D-B60BE6D4F76B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBlog.Infrastructure", "WebBlog.Infrastructure\WebBlog.Infrastructure.csproj", "{AFE8D6E3-F3FE-4120-97F9-135E53F668B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebBlog.Web", "WebBlog.Web\WebBlog.Web.csproj", "{5233FCD4-77B0-4E4B-922D-B60BE6D4F76B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7C523614-359A-496E-8DE7-65F9208D32AF}"
 EndProject
@@ -27,10 +25,6 @@ Global
 		{5233FCD4-77B0-4E4B-922D-B60BE6D4F76B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5233FCD4-77B0-4E4B-922D-B60BE6D4F76B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5233FCD4-77B0-4E4B-922D-B60BE6D4F76B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFE8D6E3-F3FE-4120-97F9-135E53F668B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFE8D6E3-F3FE-4120-97F9-135E53F668B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFE8D6E3-F3FE-4120-97F9-135E53F668B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFE8D6E3-F3FE-4120-97F9-135E53F668B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,7 +32,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DBB39501-E572-4313-ACC7-CF945A2295F6} = {1A803365-4795-44E0-BDD0-E179A018DB13}
 		{5233FCD4-77B0-4E4B-922D-B60BE6D4F76B} = {1A803365-4795-44E0-BDD0-E179A018DB13}
-		{AFE8D6E3-F3FE-4120-97F9-135E53F668B4} = {1A803365-4795-44E0-BDD0-E179A018DB13}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D51134ED-3A3F-4909-896C-00E06FEEE2B4}
