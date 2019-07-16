@@ -7,24 +7,21 @@ using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
 namespace WebBlog.ApplicationCore.Entities
 {
-    public class Author : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public override string UserName { get; set; }
-
+        [PersonalData]
         public string FirstName { get; set; }
-
+        [PersonalData]
         public string LastName { get; set; }
+
+        public byte[] AvatarImage { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Created { get; set; }
 
         public int PriorityCategoryId { get; set; }
         public Category Category { get; set; }
-        
-
-        public int AvatarImageId { get; set; }
-        public AvatarImage AvatarImage { get; set; }
-
 
         public ICollection<Post> Posts { get; set; }
     }

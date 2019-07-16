@@ -17,14 +17,11 @@ namespace WebBlog.ApplicationCore.Entities
 
         [DataType(DataType.Date)]
         public DateTime UpdateTime { get; set; }
+        public byte[] PostImage { get; set; }
+        public byte[] ResizeImage { get; set; }
 
-
-        public int PostImageId { get; set; }
-        public PostImage PostImage { get; set; }
-
-
-        public int AuthorId { get; set; }
-        public Author Author { get; set; }
+        public string ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
 
         public int CategoryId { get; set; }

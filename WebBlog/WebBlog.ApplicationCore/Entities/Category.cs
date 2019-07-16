@@ -10,7 +10,7 @@ namespace WebBlog.ApplicationCore.Entities
 
         public string Discraption { get; set; }
 
-        public ICollection<Author> Authors { get; set; }
+        public ICollection<ApplicationUser> ApplicationUsers { get; set; }
         public ICollection<Post> Posts { get; set; }
     }
 }
