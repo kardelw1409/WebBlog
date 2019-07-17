@@ -130,9 +130,9 @@ namespace WebBlog.Web
             }
             var adminUser = new ApplicationUser
             {
-                UserName = "AdminGod",
-                FirstName = "Admin",
-                LastName = "Adminovich",
+                UserName = Configuration.GetSection("UserSettings")["UserName"],
+                FirstName = Configuration.GetSection("UserSettings")["FirstName"],
+                LastName = Configuration.GetSection("UserSettings")["LastName"],
                 Email = Configuration.GetSection("UserSettings")["UserEmail"]
             };
             var userPassword = Configuration.GetSection("UserSettings")["UserPassword"];
