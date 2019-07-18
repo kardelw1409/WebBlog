@@ -73,6 +73,7 @@ namespace WebBlog.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddScoped<IMainRepository<Category>, CategoryRepository>();
+            services.AddScoped<IFullRepository<Post>, PostRepository>();
 
         }
 

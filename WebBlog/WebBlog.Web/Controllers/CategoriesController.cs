@@ -12,7 +12,6 @@ using WebBlog.ApplicationCore.Interfaces;
 
 namespace WebBlog.Web.Controllers
 {
-
     public class CategoriesController : Controller
     {
         private IMainRepository<Category> categoryRepository;
