@@ -55,13 +55,15 @@ namespace WebBlog.Web.Controllers
         }
 
         // POST: Posts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from over posting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Content,CreateTime,UpdateTime,PostImage,ResizeImage,CategoryId,Id")] Post post)
+        public async Task<IActionResult> Create([Bind("Title,Content,PostImage,ResizeImage,CategoryId,Id")] Post post)
         {
             post.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            post.CreateTime = DateTime.Now;
+            post.UpdateTime = DateTime.Now;
             if (ModelState.IsValid)
             {
                 await postRepository.Create(post);
@@ -93,13 +95,14 @@ namespace WebBlog.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CreateTime,UpdateTime,PostImage,ResizeImage,CategoryId,Id")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CategoryId,Id")] Post post)
         {
             if (id != post.Id)
             {
                 return NotFound();
             }
             post.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            post.UpdateTime = DateTime.Now;
             if (ModelState.IsValid)
             {
                 try
