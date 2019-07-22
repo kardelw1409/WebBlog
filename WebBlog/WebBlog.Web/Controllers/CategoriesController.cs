@@ -12,6 +12,7 @@ using WebBlog.ApplicationCore.Interfaces;
 
 namespace WebBlog.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
         private IMainRepository<Category> categoryRepository;
@@ -28,7 +29,6 @@ namespace WebBlog.Web.Controllers
         }
 
         // GET: Categories/Create
-        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();

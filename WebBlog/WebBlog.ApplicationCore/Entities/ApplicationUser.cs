@@ -15,7 +15,8 @@ namespace WebBlog.ApplicationCore.Entities
         [PersonalData]
         public string LastName { get; set; }
 
-        public byte[] AvatarImage { get; set; }
+        public int? AccountImageId { get; set; }
+        public AccountImage AccountImage { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Created { get; set; }

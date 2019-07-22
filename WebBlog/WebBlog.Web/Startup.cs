@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
+using WebBlog.ApplicationCore.Entities.AbstractEntities;
 using WebBlog.ApplicationCore.Interfaces;
 using WebBlog.ApplicationCore.Repositories;
 
@@ -74,6 +75,7 @@ namespace WebBlog.Web
 
             services.AddScoped<IMainRepository<Category>, CategoryRepository>();
             services.AddScoped<IFullRepository<Post>, PostRepository>();
+            services.AddScoped<IMainRepository<AccountImage>, AccountImageRepository>();
 
         }
 

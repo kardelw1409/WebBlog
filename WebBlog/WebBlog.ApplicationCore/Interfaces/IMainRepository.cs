@@ -10,7 +10,7 @@ namespace WebBlog.ApplicationCore.Interfaces
     public interface IMainRepository<TEntity> : IDisposable 
         where TEntity : Entity
     {
-        Task Create(TEntity entity);
+        Task<int?> Create(TEntity entity);
         Task<TEntity> FindById(int? id);
         Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity> Remove(int? id);

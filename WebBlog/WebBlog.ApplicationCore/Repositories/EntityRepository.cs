@@ -17,10 +17,11 @@ namespace WebBlog.ApplicationCore.Repositories
         {
             dbContext = contex;
         }
-        public async Task Create(TEntity entity)
+        public async Task<int?> Create(TEntity entity)
         {
             await dbContext.Set<TEntity>().AddAsync(entity);
             await dbContext.SaveChangesAsync();
+            return entity.Id; 
         }
 
         public async Task<TEntity> Remove(int? id)

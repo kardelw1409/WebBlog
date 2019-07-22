@@ -1,0 +1,25 @@
+﻿@model IList<int?>
+@if (User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Admin"))
+    {
+        <form action="/AccountImage/UploadImage" enctype="multipart/form-data" method="post">
+            <input type="file" name="files" />
+            <button>post</button>
+        </form>
+    }
+}
+
+@if (Model != null)
+{
+<form action="/AccountImage/ChooseImage">
+    @foreach (var item in Model)
+    {
+        <input type="radio" name="button">
+            <img src="/AccountImage/ViewImage/@item"/> 
+        <input/>
+    }
+    <input type="submit">
+</form>
+
+}

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.ApplicationCore.Entities;
+using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
 namespace WebBlog.ApplicationCore.DbContexts
 {
@@ -20,6 +21,9 @@ namespace WebBlog.ApplicationCore.DbContexts
         public DbSet<CommentOfPost> CommentOfPosts { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<AccountImage> AccountImages { get; set; }
+        public DbSet<PostImage> PostImages { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
