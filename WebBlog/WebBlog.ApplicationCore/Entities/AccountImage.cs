@@ -6,6 +6,6 @@ namespace WebBlog.ApplicationCore.Entities.AbstractEntities
 {
     public class AccountImage : ImageEntity
     {
-        public ICollection<ApplicationUser> ApplicationUsers { get; set; } 
+        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; } 
     }
 }

@@ -8,8 +8,8 @@ namespace WebBlog.ApplicationCore.Entities
     public class CommentOfPost : Comment
     {
         public int PostId { get; set; }
-        public Post Post { get; set; }
-        public ICollection<CommentToComment> CommentToComments { get; set; }
+        public virtual Post Post { get; set; }
+        public virtual ICollection<CommentToComment> CommentToComments { get; set; }
 
     }
 }

@@ -16,14 +16,14 @@ namespace WebBlog.ApplicationCore.Entities
         public string LastName { get; set; }
 
         public int? AccountImageId { get; set; }
-        public AccountImage AccountImage { get; set; }
+        public virtual AccountImage AccountImage { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Created { get; set; }
 
         public int PriorityCategoryId { get; set; }
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
 
-        public ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Post> Posts { get; set; }
     }
 }

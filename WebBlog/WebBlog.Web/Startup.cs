@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebBlog.ApplicationCore.DbContexts;
@@ -37,6 +38,7 @@ namespace WebBlog.Web
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddTransient<BlogDbContext>();
             var connection = Configuration.GetConnectionString("BlogDbContext");
             services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(connection));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<BlogDbContext>().AddDefaultUI().AddDefaultTokenProviders();

@@ -19,15 +19,15 @@ namespace WebBlog.ApplicationCore.Entities
         public DateTime UpdateTime { get; set; }
         
         public int? PostImageId { get; set; }
-        public PostImage PostImage { get; set; }
+        public virtual PostImage PostImage { get; set; }
 
         public string ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
 
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
 
-        public ICollection<CommentOfPost> CommentOfPosts { get; set; }
+        public virtual ICollection<CommentOfPost> CommentOfPosts { get; set; }
     }
 }

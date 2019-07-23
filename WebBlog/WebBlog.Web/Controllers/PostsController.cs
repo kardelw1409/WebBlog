@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
 using WebBlog.ApplicationCore.Interfaces;
+using WebBlog.Web.Models;
 
 namespace WebBlog.Web.Controllers
 {
@@ -29,7 +31,14 @@ namespace WebBlog.Web.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            return View(await postRepository.GetAll());
+            var postList = await postRepository.GetAll();
+            /*var categoryList = await categoryRepository.GetAll();
+            var mapper = new MapperConfiguration(config => config.CreateMap<Post, PostViewModel>()).CreateMapper();
+            var posts = mapper.Map<IEnumerable<Post>, List<PostViewModel>>(postList);
+            Mapper.Map()
+            var secondMapper = new MapperConfiguration(config => config.CreateMap<Category, PostViewModel>()).CreateMapper();
+            var secondPosts = secondMapper.Map<IEnumerable<PostViewModel>, List<PostViewModel>>(posts);*/
+            return View(postList);
         }
 
         // GET: Posts/Details/5
@@ -52,16 +61,14 @@ namespace WebBlog.Web.Controllers
         // GET: Posts/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "Id");
+            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName");
             return View();
         }
 
         // POST: Posts/Create
-        // To protect from over posting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Content,PostImage,ResizeImage,CategoryId,Id")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId")] Post post)
         {
             post.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.CreateTime = DateTime.Now;
@@ -71,7 +78,7 @@ namespace WebBlog.Web.Controllers
                 await postRepository.Create(post);
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag["CategoryId"] = new SelectList(await categoryRepository.GetAll(), nameof(Category.Id), nameof(Category.CategoryName), post.CategoryId);
+            ViewBag["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(post);
         }
 
@@ -88,13 +95,11 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "Id", post.CategoryId);
+            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(post);
         }
 
         // POST: Posts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CategoryId,Id")] Post post)
@@ -125,7 +130,7 @@ namespace WebBlog.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "Id", post.CategoryId);
+            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(post);
         }
 

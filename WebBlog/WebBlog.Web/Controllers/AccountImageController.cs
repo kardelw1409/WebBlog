@@ -48,7 +48,7 @@ namespace WebBlog.Web.Controllers
             {
                 MemoryStream memoryStream = new MemoryStream();
                 await uploadedImage.OpenReadStream().CopyToAsync(memoryStream);
-                Image image = Image.FromStream(memoryStream);
+                var image = Image.FromStream(memoryStream);
                 var imageEntity = new AccountImage()
                 {
                     Name = uploadedImage.Name,

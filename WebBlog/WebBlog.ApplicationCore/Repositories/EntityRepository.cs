@@ -26,12 +26,6 @@ namespace WebBlog.ApplicationCore.Repositories
 
         public async Task<TEntity> Remove(int? id)
         {
-            /*var entityItem = DbContext.Set<TEntity>().Where(p => p.Id == entity.Id).FirstOrDefault();
-            if (entityItem != null)
-            {
-                DbContext.Set<TEntity>().Remove(entityItem);
-                await DbContext.SaveChangesAsync();
-            }*/
             var entityItem = await FindById(id);
             if (entityItem == null)
             {
@@ -49,7 +43,7 @@ namespace WebBlog.ApplicationCore.Repositories
 
         public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return await dbContext.Set<TEntity>().AsNoTracking().ToListAsync();
+            return await dbContext.Set<TEntity>().ToListAsync();
         }
 
         public void Dispose()

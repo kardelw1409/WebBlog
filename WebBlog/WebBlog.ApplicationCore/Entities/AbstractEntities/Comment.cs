@@ -11,6 +11,6 @@ namespace WebBlog.ApplicationCore.Entities.AbstractEntities
         public DateTime CreateTime { get; set; }
 
         public string ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }

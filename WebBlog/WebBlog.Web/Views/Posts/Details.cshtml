@@ -26,11 +26,30 @@
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Category.Id)
+            @Html.DisplayFor(model => model.Category.CategoryName)
         </dd>
     </dl>
 </div>
+
+<table>
+    <tbody>
+        @foreach (var item in Model.CommentOfPosts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
 <div>
+    <a asp-controller="CommentOfPost" asp-action="Create" asp-route-id="@Model.Id">Comment</a> |
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

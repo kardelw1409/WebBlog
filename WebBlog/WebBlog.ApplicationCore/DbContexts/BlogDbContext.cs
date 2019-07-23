@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using WebBlog.ApplicationCore.Entities;
 using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
@@ -24,6 +25,8 @@ namespace WebBlog.ApplicationCore.DbContexts
         public DbSet<AccountImage> AccountImages { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    => optionsBuilder.UseLazyLoadingProxies();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
