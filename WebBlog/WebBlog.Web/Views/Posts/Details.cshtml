@@ -31,25 +31,13 @@
     </dl>
 </div>
 
-<table>
-    <tbody>
-        @foreach (var item in Model.CommentOfPosts)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<br>
 
 
 <div>
-    <a asp-controller="CommentOfPost" asp-action="Create" asp-route-id="@Model.Id">Comment</a> |
+    <a asp-controller="CommentOfPosts" asp-action="Index" asp-route-id="@Model.Id">Show comments</a> |
+    <a asp-controller="CommentOfPosts" asp-action="Create" asp-route-id="@Model.Id">Add comment</a> |
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using WebBlog.ApplicationCore.Interfaces;
 
 namespace WebBlog.Web.Controllers
 {
+    [Authorize]
     public class CommentOfPostsController : Controller
     {
         private IFullRepository<Post> postRepository;
@@ -24,13 +26,15 @@ namespace WebBlog.Web.Controllers
         }
 
         // GET: CommentOfPosts
-        /*public async Task<IActionResult> Index()
+        [Route("CommentOfPosts/Index/{id}")]
+        public async Task<IActionResult> Index(int? id)
         {
-            var blogDbContext = _context.CommentOfPosts.Include(c => c.ApplicationUser).Include(c => c.Post);
-            return View(await blogDbContext.ToListAsync());
+            var post = await postRepository.FindById(id);
+            var listComments = post.CommentOfPosts;
+            return View(listComments);
         }
 
-        // GET: CommentOfPosts/Details/5
+        /*// GET: CommentOfPosts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -49,46 +53,26 @@ namespace WebBlog.Web.Controllers
 
             return View(commentOfPost);
         }*/
-
         // GET: CommentOfPosts/Create
-        /*public async Task<IActionResult> Create(int? id)
+        public IActionResult Create(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = await postRepository.FindById(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+            ViewData["PostId"] = id;
             return View();
-        }*/
+        }
 
         // POST: CommentOfPosts/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? id, [Bind("Content,Id")] CommentOfPost commentOfPost)
+        public async Task<IActionResult> Create([Bind("Id,Content,PostId")] CommentOfPost commentOfPost)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = await postRepository.FindById(id);   
-            if (post == null)
-            {
-                return NotFound();
-            }
             commentOfPost.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             commentOfPost.CreateTime = DateTime.Now;
             if (ModelState.IsValid)
             {
                 await commentOfPostRepository.Create(commentOfPost);
-                return RedirectToAction("Post/Details/" + id);
+                return RedirectToAction(nameof(Create));
             }
             return View(commentOfPost);
         }
@@ -146,8 +130,8 @@ namespace WebBlog.Web.Controllers
             ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", commentOfPost.ApplicationUserId);
             ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Id", commentOfPost.PostId);
             return View(commentOfPost);
-        }
-
+        }*/
+        [Authorize(Roles = "Admin")]
         // GET: CommentOfPosts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -156,18 +140,15 @@ namespace WebBlog.Web.Controllers
                 return NotFound();
             }
 
-            var commentOfPost = await _context.CommentOfPosts
-                .Include(c => c.ApplicationUser)
-                .Include(c => c.Post)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var commentOfPost = await commentOfPostRepository.FindById(id);
             if (commentOfPost == null)
             {
                 return NotFound();
             }
 
             return View(commentOfPost);
-        }*/
-
+        }
+        [Authorize(Roles = "Admin")]
         // POST: CommentOfPosts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
