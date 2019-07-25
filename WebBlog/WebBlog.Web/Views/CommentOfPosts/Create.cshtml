@@ -18,7 +18,7 @@
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="PostId" type="hidden" value="@ViewData["PostId"]" class="form-control" />
+                <input asp-for="PostId" type="hidden" value="@ViewBag.PostId" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

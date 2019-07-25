@@ -15,7 +15,7 @@
             @Html.DisplayNameFor(model => model.Post)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Post.Id)
+            @Html.DisplayFor(model => model.Post.Title)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Content)
@@ -33,13 +33,14 @@
             @Html.DisplayNameFor(model => model.ApplicationUser)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ApplicationUser.Id)
+            @Html.DisplayFor(model => model.ApplicationUser.UserName)
         </dd>
+
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index" asp-route-id="@Model.PostId">Back to List</a>
     </form>
 </div>

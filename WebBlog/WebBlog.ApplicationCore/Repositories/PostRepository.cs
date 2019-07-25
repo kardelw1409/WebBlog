@@ -6,7 +6,7 @@ using WebBlog.ApplicationCore.DbContexts;
 
 namespace WebBlog.ApplicationCore.Repositories
 {
-    public class PostRepository : FullEntityRepository<Post>
+    public class PostRepository : EntityRepository<Post>
     {
         public PostRepository(BlogDbContext contex) : base(contex)
         {

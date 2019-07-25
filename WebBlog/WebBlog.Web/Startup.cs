@@ -75,10 +75,10 @@ namespace WebBlog.Web
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddScoped<IMainRepository<Category>, CategoryRepository>();
-            services.AddScoped<IFullRepository<Post>, PostRepository>();
-            services.AddScoped<IMainRepository<AccountImage>, AccountImageRepository>();
-            services.AddScoped<IMainRepository<CommentOfPost>, CommentOfPostRepository>();
+            services.AddScoped<IRepository<Category>, CategoryRepository>();
+            services.AddScoped<IRepository<Post>, PostRepository>();
+            services.AddScoped<IRepository<AccountImage>, AccountImageRepository>();
+            services.AddScoped<IRepository<CommentOfPost>, CommentOfPostRepository>();
 
         }
 

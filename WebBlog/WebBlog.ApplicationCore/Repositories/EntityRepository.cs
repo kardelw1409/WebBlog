@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using WebBlog.ApplicationCore.Entities.AbstractEntities;
 using WebBlog.ApplicationCore.Interfaces;
 using WebBlog.ApplicationCore.DbContexts;
+using System.Linq;
 
 namespace WebBlog.ApplicationCore.Repositories
 {
-    public abstract class EntityRepository<TEntity> : IMainRepository<TEntity>
+    public abstract class EntityRepository<TEntity> : IRepository<TEntity>
         where TEntity : Entity
     {
         protected BlogDbContext dbContext;
@@ -41,9 +42,25 @@ namespace WebBlog.ApplicationCore.Repositories
             return await dbContext.Set<TEntity>().FindAsync(id);
         }
 
+        public async Task<IEnumerable<TEntity>> Get(Func<TEntity, bool> predicate)
+        {
+            return await Task.FromResult(dbContext.Set<TEntity>().Where(predicate));
+        }
+
         public async Task<IEnumerable<TEntity>> GetAll()
         {
             return await dbContext.Set<TEntity>().ToListAsync();
+        }
+
+        public async Task Update(TEntity entity)
+        {
+            var entityItem = await dbContext.Set<TEntity>().SingleOrDefaultAsync(p => p.Id == entity.Id);
+            if (entityItem != null)
+            {
+                dbContext.Entry(entityItem).CurrentValues.SetValues(entity);
+                await dbContext.SaveChangesAsync();
+            }
+
         }
 
         public void Dispose()

@@ -16,21 +16,22 @@ namespace WebBlog.Web.Controllers
     [Authorize]
     public class CommentOfPostsController : Controller
     {
-        private IFullRepository<Post> postRepository;
-        private IMainRepository<CommentOfPost> commentOfPostRepository;
+        private IRepository<Post> postRepository;
+        private IRepository<CommentOfPost> commentOfPostRepository;
 
-        public CommentOfPostsController(IFullRepository<Post> postRepository, IMainRepository<CommentOfPost> commentOfPostRepository)
+        public CommentOfPostsController(IRepository<Post> postRepository, IRepository<CommentOfPost> commentOfPostRepository)
         {
             this.postRepository = postRepository;
             this.commentOfPostRepository = commentOfPostRepository;
         }
 
         // GET: CommentOfPosts
-        [Route("CommentOfPosts/Index/{id}")]
-        public async Task<IActionResult> Index(int? id)
+        //[Route("CommentOfPosts/Index/{id}")]
+        public async Task<IActionResult> Index(int id)
         {
             var post = await postRepository.FindById(id);
             var listComments = post.CommentOfPosts;
+            ViewBag.PostId = id;
             return View(listComments);
         }
 
@@ -53,10 +54,11 @@ namespace WebBlog.Web.Controllers
 
             return View(commentOfPost);
         }*/
-        // GET: CommentOfPosts/Create
+        // GET: CommentOfPosts/Create//PostId
+        //[Route("CommentOfPosts/Create/{id}")]
         public IActionResult Create(int? id)
         {
-            ViewData["PostId"] = id;
+            ViewBag.PostId = id;
             return View();
         }
 
@@ -65,14 +67,15 @@ namespace WebBlog.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Content,PostId")] CommentOfPost commentOfPost)
+        public async Task<IActionResult> Create([Bind("Content,PostId")] CommentOfPost commentOfPost)
         {
             commentOfPost.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             commentOfPost.CreateTime = DateTime.Now;
             if (ModelState.IsValid)
             {
                 await commentOfPostRepository.Create(commentOfPost);
-                return RedirectToAction(nameof(Create));
+                //return Index(commentOfPost.PostId);
+                return RedirectToRoutePermanent("CommentOfPosts/Index/" + commentOfPost.PostId);
             }
             return View(commentOfPost);
         }
@@ -145,7 +148,6 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
-
             return View(commentOfPost);
         }
         [Authorize(Roles = "Admin")]
@@ -154,8 +156,9 @@ namespace WebBlog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var commentOfPost = await commentOfPostRepository.FindById(id);
             await commentOfPostRepository.Remove(id);
-            return RedirectToAction("/Post/Index");
+            return RedirectToAction(nameof(Index), new { commentOfPost.PostId });
         }
 
         private async Task<bool> PostExists(int id)

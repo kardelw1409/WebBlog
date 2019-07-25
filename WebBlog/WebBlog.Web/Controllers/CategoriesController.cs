@@ -15,9 +15,9 @@ namespace WebBlog.Web.Controllers
     [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
-        private IMainRepository<Category> categoryRepository;
+        private IRepository<Category> categoryRepository;
 
-        public CategoriesController(IMainRepository<Category> categoryRepository)
+        public CategoriesController(IRepository<Category> categoryRepository)
         {
             this.categoryRepository = categoryRepository;
         }

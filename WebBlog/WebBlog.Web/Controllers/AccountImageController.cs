@@ -18,10 +18,10 @@ namespace WebBlog.Web.Controllers
     [Authorize]
     public class AccountImageController : Controller
     {
-        private readonly IMainRepository<AccountImage> accountImageRepository;
+        private readonly IRepository<AccountImage> accountImageRepository;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public AccountImageController(IMainRepository<AccountImage> accountImageRepository, UserManager<ApplicationUser> userManager)
+        public AccountImageController(IRepository<AccountImage> accountImageRepository, UserManager<ApplicationUser> userManager)
         {
             this.accountImageRepository = accountImageRepository;
             this.userManager = userManager;
