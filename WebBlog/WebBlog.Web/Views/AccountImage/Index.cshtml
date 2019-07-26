@@ -3,7 +3,7 @@
 {
     @if (User.IsInRole("Admin"))
     {
-        <form action="/AccountImage/UploadImage" enctype="multipart/form-data" method="post">
+        <form asp-controller="AccountImage" asp-action="UploadImage" enctype="multipart/form-data" method="post">
             <input type="file" name="files" />
             <button>post</button>
         </form>
@@ -12,14 +12,14 @@
 
 @if (Model != null)
 {
-<form action="/AccountImage/ChooseImage">
+<form asp-controller="AccountImage" asp-action="ChooseImage" asp-route-returnUrl="@Context.Request.Path">
     @foreach (var item in Model)
     {
-        <input type="radio" name="button">
-            <img src="/AccountImage/ViewImage/@item"/> 
-        <input/>
+        <button type="submit" id="@item" value="@item">
+            <img for="@item" src="/AccountImage/ViewImage/@item" />
+        </button>
     }
-    <input type="submit">
+
 </form>
 
 }

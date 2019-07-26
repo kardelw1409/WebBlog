@@ -26,7 +26,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // GET: CommentOfPosts
-        //[Route("CommentOfPosts/Index/{id}")]
+        [Route("~/CommentOfPosts/Index/{id:int}")]
         public async Task<IActionResult> Index(int id)
         {
             var post = await postRepository.FindById(id);
@@ -35,38 +35,18 @@ namespace WebBlog.Web.Controllers
             return View(listComments);
         }
 
-        /*// GET: CommentOfPosts/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var commentOfPost = await _context.CommentOfPosts
-                .Include(c => c.ApplicationUser)
-                .Include(c => c.Post)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (commentOfPost == null)
-            {
-                return NotFound();
-            }
-
-            return View(commentOfPost);
-        }*/
         // GET: CommentOfPosts/Create//PostId
-        //[Route("CommentOfPosts/Create/{id}")]
-        public IActionResult Create(int? id)
+        [Route("~/CommentOfPosts/Create/{id:int}")]
+        public IActionResult Create(int id)
         {
             ViewBag.PostId = id;
             return View();
         }
 
         // POST: CommentOfPosts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("~/CommentOfPosts/Create/{id:int}")]
         public async Task<IActionResult> Create([Bind("Content,PostId")] CommentOfPost commentOfPost)
         {
             commentOfPost.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -74,68 +54,13 @@ namespace WebBlog.Web.Controllers
             if (ModelState.IsValid)
             {
                 await commentOfPostRepository.Create(commentOfPost);
-                //return Index(commentOfPost.PostId);
-                return RedirectToRoutePermanent("CommentOfPosts/Index/" + commentOfPost.PostId);
+                return RedirectToRoute("default", new { controller = "CommentOfPosts", action = "Index",  id = commentOfPost.PostId } );
             }
             return View(commentOfPost);
         }
 
-        // GET: CommentOfPosts/Edit/5
-        /*public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var commentOfPost = await _context.CommentOfPosts.FindAsync(id);
-            if (commentOfPost == null)
-            {
-                return NotFound();
-            }
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", commentOfPost.ApplicationUserId);
-            ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Id", commentOfPost.PostId);
-            return View(commentOfPost);
-        }
-
-        // POST: CommentOfPosts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,Content,CreateTime,ApplicationUserId,Id")] CommentOfPost commentOfPost)
-        {
-            if (id != commentOfPost.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(commentOfPost);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CommentOfPostExists(commentOfPost.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", commentOfPost.ApplicationUserId);
-            ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Id", commentOfPost.PostId);
-            return View(commentOfPost);
-        }*/
-        [Authorize(Roles = "Admin")]
         // GET: CommentOfPosts/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -150,15 +75,16 @@ namespace WebBlog.Web.Controllers
             }
             return View(commentOfPost);
         }
-        [Authorize(Roles = "Admin")]
+
         // POST: CommentOfPosts/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var commentOfPost = await commentOfPostRepository.FindById(id);
             await commentOfPostRepository.Remove(id);
-            return RedirectToAction(nameof(Index), new { commentOfPost.PostId });
+            return RedirectToRoute("default", new { controller = "CommentOfPosts", action = "Index", id = commentOfPost.PostId });
         }
 
         private async Task<bool> PostExists(int id)

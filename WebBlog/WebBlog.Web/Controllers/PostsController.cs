@@ -23,7 +23,7 @@ namespace WebBlog.Web.Controllers
         private IRepository<Category> categoryRepository;
         private IRepository<CommentOfPost> commentOfPostsRepository;
 
-        public PostsController(IRepository<Post> postRepository, IRepository<Category> categoryRepository, 
+        public PostsController(IRepository<Post> postRepository, IRepository<Category> categoryRepository,
             IRepository<CommentOfPost> commentOfPostsRepository)
         {
             this.postRepository = postRepository;
@@ -35,12 +35,6 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var postList = await postRepository.GetAll();
-            /*var categoryList = await categoryRepository.GetAll();
-            var mapper = new MapperConfiguration(config => config.CreateMap<Post, PostViewModel>()).CreateMapper();
-            var posts = mapper.Map<IEnumerable<Post>, List<PostViewModel>>(postList);
-            Mapper.Map()
-            var secondMapper = new MapperConfiguration(config => config.CreateMap<Category, PostViewModel>()).CreateMapper();
-            var secondPosts = secondMapper.Map<IEnumerable<PostViewModel>, List<PostViewModel>>(posts);*/
             return View(postList);
         }
 
@@ -86,6 +80,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // GET: Posts/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -103,6 +98,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // POST: Posts/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CategoryId,Id")] Post post)
@@ -138,6 +134,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // GET: Posts/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -157,6 +154,7 @@ namespace WebBlog.Web.Controllers
         // POST: Posts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await postRepository.Remove(id);

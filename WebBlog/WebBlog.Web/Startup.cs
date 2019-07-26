@@ -79,6 +79,7 @@ namespace WebBlog.Web
             services.AddScoped<IRepository<Post>, PostRepository>();
             services.AddScoped<IRepository<AccountImage>, AccountImageRepository>();
             services.AddScoped<IRepository<CommentOfPost>, CommentOfPostRepository>();
+            services.AddScoped<IRepository<CommentToComment>, CommentToCommentRepository>();
 
         }
 

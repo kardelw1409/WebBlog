@@ -62,8 +62,7 @@ namespace WebBlog.Web.Controllers
             return RedirectToAction("Index");
         }
 
-
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> ChooseImage(int? id)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
