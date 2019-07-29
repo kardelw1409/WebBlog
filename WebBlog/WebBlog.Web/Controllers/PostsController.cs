@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,13 +25,15 @@ namespace WebBlog.Web.Controllers
         private IRepository<Post> postRepository;
         private IRepository<Category> categoryRepository;
         private IRepository<CommentOfPost> commentOfPostsRepository;
+        private IRepository<PostImage> postImageRepository;
 
         public PostsController(IRepository<Post> postRepository, IRepository<Category> categoryRepository,
-            IRepository<CommentOfPost> commentOfPostsRepository)
+            IRepository<CommentOfPost> commentOfPostsRepository, IRepository<PostImage> postImageRepository)
         {
             this.postRepository = postRepository;
             this.categoryRepository = categoryRepository;
             this.commentOfPostsRepository = commentOfPostsRepository;
+            this.postImageRepository = postImageRepository;
         }
 
         // GET: Posts
@@ -65,7 +70,7 @@ namespace WebBlog.Web.Controllers
         // POST: Posts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId, PostImageId")] Post post)
         {
             post.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.CreateTime = DateTime.Now;
@@ -167,6 +172,38 @@ namespace WebBlog.Web.Controllers
                 }
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(IList<IFormFile> files)
+        {
+            IFormFile uploadedImage = files.FirstOrDefault();
+            if (uploadedImage == null || uploadedImage.ContentType.ToLower().StartsWith("image/"))
+            {
+                MemoryStream memoryStream = new MemoryStream();
+                await uploadedImage.OpenReadStream().CopyToAsync(memoryStream);
+                var image = Image.FromStream(memoryStream);
+                var imageEntity = new PostImage()
+                {
+                    Name = uploadedImage.Name,
+                    Data = memoryStream.ToArray(),
+                    Width = image.Width,
+                    Height = image.Height,
+                    ContentType = uploadedImage.ContentType
+                };
+                ViewBag.Id = await postImageRepository.Create(imageEntity);
+            }
+            return RedirectToAction("Create");
+        }
+
+        [HttpGet]
+        public async Task<FileStreamResult> ViewImage(int? id)
+        {
+            var image = await postImageRepository.FindById(id);
+            var ms = new MemoryStream(image.Data);
+
+            return new FileStreamResult(ms, image.ContentType);
         }
 
         private async Task<bool> PostExists(int id)

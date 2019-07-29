@@ -80,6 +80,7 @@ namespace WebBlog.Web
             services.AddScoped<IRepository<AccountImage>, AccountImageRepository>();
             services.AddScoped<IRepository<CommentOfPost>, CommentOfPostRepository>();
             services.AddScoped<IRepository<CommentToComment>, CommentToCommentRepository>();
+            services.AddScoped<IRepository<PostImage>, PostImageRepository>();
 
         }
 
@@ -137,13 +138,13 @@ namespace WebBlog.Web
             }
             var adminUser = new ApplicationUser
             {
-                UserName = Configuration.GetSection("UserSettings")["UserName"],
-                FirstName = Configuration.GetSection("UserSettings")["FirstName"],
-                LastName = Configuration.GetSection("UserSettings")["LastName"],
-                Email = Configuration.GetSection("UserSettings")["UserEmail"]
+                UserName = Configuration.GetSection("AdminSettings")["UserName"],
+                FirstName = Configuration.GetSection("AdminSettings")["FirstName"],
+                LastName = Configuration.GetSection("AdminSettings")["LastName"],
+                Email = Configuration.GetSection("AdminSettings")["UserEmail"]
             };
-            var userPassword = Configuration.GetSection("UserSettings")["UserPassword"];
-            var user = await userManager.FindByEmailAsync(Configuration.GetSection("UserSettings")["UserEmail"]);
+            var userPassword = Configuration.GetSection("AdminSettings")["UserPassword"];
+            var user = await userManager.FindByEmailAsync(Configuration.GetSection("AdminSettings")["UserEmail"]);
             if (user == null)
             {
                 var createPowerUser = await userManager.CreateAsync(adminUser, userPassword);

@@ -7,6 +7,6 @@ namespace WebBlog.ApplicationCore.Entities
 {
     public class PostImage : ImageEntity
     {
-        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
+        public virtual ICollection<Post> Posts { get; set; }
     }
 }

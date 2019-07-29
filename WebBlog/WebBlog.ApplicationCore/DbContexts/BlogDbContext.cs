@@ -31,6 +31,31 @@ namespace WebBlog.ApplicationCore.DbContexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<AccountImage>()
+            .HasMany(i => i.ApplicationUsers)
+            .WithOne(c => c.AccountImage)
+            .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Category>().HasData(
+                new Category
+                {
+                    Id = 1,
+                    CategoryName = "Sport",
+                    Discraption = "A sport is commonly defined as an athletic activity that " +
+                "involves a degree of competition, such as tennis or basketball. " +
+                "Some games and many kinds of racing are called sports. " +
+                "A professional at a sport is called an athlete. Many people play sports with their friends."
+                },
+                new Category
+                {
+                    Id = 2,
+                    CategoryName = "Nature",
+                    Discraption = "Natural World. Natural World refers to the 'Natural Environment' " +
+                    "that surrounds us in various forms like the earth, sun, moon, stars, forests, rivers, " +
+                    "animals etc. It can be described as the Earth's environment which includes everything " +
+                    "which is not man made and / or which has not been substantially altered by Humans."
+                });
         }
 
     }

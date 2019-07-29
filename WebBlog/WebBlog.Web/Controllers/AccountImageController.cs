@@ -62,7 +62,7 @@ namespace WebBlog.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> ChooseImage(int? id)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -78,6 +78,33 @@ namespace WebBlog.Web.Controllers
             var ms = new MemoryStream(image.Data);
 
             return new FileStreamResult(ms, image.ContentType);
+        }
+
+        // GET: AccountImage/Delete/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var image = await accountImageRepository.FindById(id);
+            if (image == null)
+            {
+                return NotFound();
+            }
+            return View(image);
+        }
+
+        // POST: CommentOfPosts/Delete/5
+        [Authorize(Roles = "Admin")]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int? id)
+        {
+            await accountImageRepository.Remove(id);
+            return RedirectToAction("Index");
         }
     }
 }
