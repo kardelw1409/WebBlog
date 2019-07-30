@@ -9,9 +9,12 @@
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                    <img src="/AccountImage/ViewImage/@UserManager.GetUserAsync(User).Result.AccountImageId" width="20" height="20">
-                </a>
+                @if (UserManager.GetUserAsync(User).Result != null)
+                {
+                    <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                        <img src="/AccountImage/ViewImage/@UserManager.GetUserAsync(User).Result.AccountImageId" width="20" height="20">
+                    </a>
+                }
             </li>
             <li>
                 <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>

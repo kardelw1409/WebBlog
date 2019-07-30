@@ -4,7 +4,7 @@
     @if (User.IsInRole("Admin"))
     {
         <form asp-controller="AccountImage" asp-action="UploadImage" enctype="multipart/form-data" method="post">
-            <input type="file" name="files" />
+            <input type="file" name="picture" />
             <button>post</button>
         </form>
     }

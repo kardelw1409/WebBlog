@@ -70,15 +70,15 @@ namespace WebBlog.Web.Controllers
         // POST: Posts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId, PostImageId")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId")] Post post)
         {
             post.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.CreateTime = DateTime.Now;
             post.UpdateTime = DateTime.Now;
             if (ModelState.IsValid)
             {
-                await postRepository.Create(post);
-                return RedirectToAction(nameof(Index));
+                var postId = await postRepository.Create(post);
+                return RedirectToRoute("default", new { controller = "Posts", action = "IndexUpload", id = postId });
             }
             ViewBag["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(post);
@@ -174,11 +174,17 @@ namespace WebBlog.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Posts
+        public async Task<IActionResult> IndexUpload(int id)
+        {
+            var post = await postRepository.FindById(id);
+            return View(post);
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> UploadImage(IList<IFormFile> files)
+        public async Task<IActionResult> UploadImage(Post post, [FromForm]IFormFile uploadedImage)
         {
-            IFormFile uploadedImage = files.FirstOrDefault();
             if (uploadedImage == null || uploadedImage.ContentType.ToLower().StartsWith("image/"))
             {
                 MemoryStream memoryStream = new MemoryStream();
@@ -192,9 +198,12 @@ namespace WebBlog.Web.Controllers
                     Height = image.Height,
                     ContentType = uploadedImage.ContentType
                 };
-                ViewBag.Id = await postImageRepository.Create(imageEntity);
+                var imageId = await postImageRepository.Create(imageEntity);
+                //var post = await postRepository.FindById(id);
+                post.PostImageId = imageId;
+                await postRepository.Update(post);
             }
-            return RedirectToAction("Create");
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

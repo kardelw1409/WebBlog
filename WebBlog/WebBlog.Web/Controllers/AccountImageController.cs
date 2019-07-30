@@ -41,21 +41,20 @@ namespace WebBlog.Web.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> UploadImage(IList<IFormFile> files)
+        public async Task<IActionResult> UploadImage(IFormFile picture)
         {
-            IFormFile uploadedImage = files.FirstOrDefault();
-            if (uploadedImage == null || uploadedImage.ContentType.ToLower().StartsWith("image/"))
+            if (picture == null || picture.ContentType.ToLower().StartsWith("image/"))
             {
                 MemoryStream memoryStream = new MemoryStream();
-                await uploadedImage.OpenReadStream().CopyToAsync(memoryStream);
+                await picture.OpenReadStream().CopyToAsync(memoryStream);
                 var image = Image.FromStream(memoryStream);
                 var imageEntity = new AccountImage()
                 {
-                    Name = uploadedImage.Name,
+                    Name = picture.Name,
                     Data = memoryStream.ToArray(),
                     Width = image.Width,
                     Height = image.Height,
-                    ContentType = uploadedImage.ContentType
+                    ContentType = picture.ContentType
                 };
                 await accountImageRepository.Create(imageEntity);
             }

@@ -37,6 +37,11 @@ namespace WebBlog.ApplicationCore.DbContexts
             .WithOne(c => c.AccountImage)
             .OnDelete(DeleteBehavior.SetNull);
 
+            builder.Entity<PostImage>()
+            .HasMany(i => i.Posts)
+            .WithOne(c => c.PostImage)
+            .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<Category>().HasData(
                 new Category
                 {
