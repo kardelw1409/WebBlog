@@ -185,7 +185,12 @@ namespace WebBlog.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadImage(Post post, [FromForm]IFormFile uploadedImage)
         {
-            if (uploadedImage == null || uploadedImage.ContentType.ToLower().StartsWith("image/"))
+            if (uploadedImage == null)
+            {
+                //TO DO
+                return RedirectToAction("Index");
+            }
+            if (uploadedImage.ContentType.ToLower().StartsWith("image/"))
             {
                 MemoryStream memoryStream = new MemoryStream();
                 await uploadedImage.OpenReadStream().CopyToAsync(memoryStream);
@@ -199,7 +204,6 @@ namespace WebBlog.Web.Controllers
                     ContentType = uploadedImage.ContentType
                 };
                 var imageId = await postImageRepository.Create(imageEntity);
-                //var post = await postRepository.FindById(id);
                 post.PostImageId = imageId;
                 await postRepository.Update(post);
             }
