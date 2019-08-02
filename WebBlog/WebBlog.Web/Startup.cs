@@ -80,7 +80,7 @@ namespace WebBlog.Web
             services.AddScoped<IRepository<AccountImage>, AccountImageRepository>();
             services.AddScoped<IRepository<CommentOfPost>, CommentOfPostRepository>();
             services.AddScoped<IRepository<CommentToComment>, CommentToCommentRepository>();
-            services.AddScoped<IRepository<PostImage>, PostImageRepository>();
+            //services.AddScoped<IRepository<PostImage>, PostImageRepository>();
 
         }
 
@@ -92,6 +92,7 @@ namespace WebBlog.Web
                 var context = serviceScope.ServiceProvider.GetRequiredService<BlogDbContext>();
                 context.Database.EnsureCreated();
             }
+            //env.EnvironmentName = EnvironmentName.Production;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

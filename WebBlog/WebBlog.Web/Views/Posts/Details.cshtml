@@ -5,10 +5,14 @@
 }
 
 <h2>@Html.DisplayFor(model => model.Title)</h2>
-<h5>@Html.DisplayFor(model => model.ApplicationUser.UserName) </h5>
+<h5>Author: @Html.DisplayFor(model => model.ApplicationUser.UserName) </h5>
 <div>
     <hr />
-    <img src="/Posts/ViewImage/@Model.PostImageId" />
+
+    @if (Model.PostImage != null)
+    {
+        <img style='width:1000px; height:650px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.PostImage))" />
+    }
     <p>
         @Html.DisplayFor(model => model.Content)
     </p>

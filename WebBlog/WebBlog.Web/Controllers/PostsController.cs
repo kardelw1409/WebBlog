@@ -25,15 +25,14 @@ namespace WebBlog.Web.Controllers
         private IRepository<Post> postRepository;
         private IRepository<Category> categoryRepository;
         private IRepository<CommentOfPost> commentOfPostsRepository;
-        private IRepository<PostImage> postImageRepository;
 
         public PostsController(IRepository<Post> postRepository, IRepository<Category> categoryRepository,
-            IRepository<CommentOfPost> commentOfPostsRepository, IRepository<PostImage> postImageRepository)
+            IRepository<CommentOfPost> commentOfPostsRepository)
         {
             this.postRepository = postRepository;
             this.categoryRepository = categoryRepository;
             this.commentOfPostsRepository = commentOfPostsRepository;
-            this.postImageRepository = postImageRepository;
+
         }
 
         // GET: Posts
@@ -67,18 +66,28 @@ namespace WebBlog.Web.Controllers
             return View();
         }
 
-        // POST: Posts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,PostImage")] PostViewModel postView)
         {
+            var post = new Post { Title = postView.Title, Content = postView.Content, CategoryId = postView.CategoryId };
             post.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.CreateTime = DateTime.Now;
             post.UpdateTime = DateTime.Now;
+
+            byte[] imageData = null;
+
+            using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+            {
+                imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
+            }
+
+            post.PostImage = imageData;
+
             if (ModelState.IsValid)
             {
                 var postId = await postRepository.Create(post);
-                return RedirectToRoute("default", new { controller = "Posts", action = "IndexUpload", id = postId });
+                return RedirectToAction("Index");
             }
             ViewBag["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(post);
@@ -106,14 +115,24 @@ namespace WebBlog.Web.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CategoryId,Id")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CategoryId,PostImage,Id")] PostViewModel postView)
         {
+            var post = new Post { Id = postView.Id, Title = postView.Title, ApplicationUserId = postView.ApplicationUserId, Content = postView.Content, CategoryId = postView.CategoryId };
             if (id != post.Id)
             {
                 return NotFound();
             }
             post.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.UpdateTime = DateTime.Now;
+
+            byte[] imageData = null;
+
+            using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+            {
+                imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
+            }
+
+            post.PostImage = imageData;
             if (ModelState.IsValid)
             {
                 try
@@ -163,7 +182,7 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await postRepository.Remove(id);
-            var commentsListForDelete = new List<CommentOfPost>(await commentOfPostsRepository.Get(( commentOfPost) => id == commentOfPost.PostId));
+            var commentsListForDelete = new List<CommentOfPost>(await commentOfPostsRepository.Get((commentOfPost) => id == commentOfPost.PostId));
             if (commentsListForDelete.Count != 0)
             {
                 foreach (var count in commentsListForDelete)
@@ -174,54 +193,11 @@ namespace WebBlog.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Posts
-        public async Task<IActionResult> IndexUpload(int id)
-        {
-            var post = await postRepository.FindById(id);
-            return View(post);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        public async Task<IActionResult> UploadImage(Post post, [FromForm]IFormFile uploadedImage)
-        {
-            if (uploadedImage == null)
-            {
-                //TO DO
-                return RedirectToAction("Index");
-            }
-            if (uploadedImage.ContentType.ToLower().StartsWith("image/"))
-            {
-                MemoryStream memoryStream = new MemoryStream();
-                await uploadedImage.OpenReadStream().CopyToAsync(memoryStream);
-                var image = Image.FromStream(memoryStream);
-                var imageEntity = new PostImage()
-                {
-                    Name = uploadedImage.Name,
-                    Data = memoryStream.ToArray(),
-                    Width = image.Width,
-                    Height = image.Height,
-                    ContentType = uploadedImage.ContentType
-                };
-                var imageId = await postImageRepository.Create(imageEntity);
-                post.PostImageId = imageId;
-                await postRepository.Update(post);
-            }
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public async Task<FileStreamResult> ViewImage(int? id)
-        {
-            var image = await postImageRepository.FindById(id);
-            var ms = new MemoryStream(image.Data);
-
-            return new FileStreamResult(ms, image.ContentType);
-        }
-
         private async Task<bool> PostExists(int id)
         {
             return (await postRepository.GetAll()).Any(e => e.Id == id);
         }
+
+
     }
 }

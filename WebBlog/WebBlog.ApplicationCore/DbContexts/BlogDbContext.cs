@@ -23,7 +23,7 @@ namespace WebBlog.ApplicationCore.DbContexts
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<AccountImage> AccountImages { get; set; }
-        public DbSet<PostImage> PostImages { get; set; }
+        //public DbSet<PostImage> PostImages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     => optionsBuilder.UseLazyLoadingProxies();
@@ -37,10 +37,10 @@ namespace WebBlog.ApplicationCore.DbContexts
             .WithOne(c => c.AccountImage)
             .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Entity<PostImage>()
+            /*builder.Entity<PostImage>()
             .HasMany(i => i.Posts)
             .WithOne(c => c.PostImage)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade);*/
 
             builder.Entity<Category>().HasData(
                 new Category

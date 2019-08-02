@@ -18,8 +18,7 @@ namespace WebBlog.ApplicationCore.Entities
         [DataType(DataType.Date)]
         public DateTime UpdateTime { get; set; }
         
-        public int? PostImageId { get; set; }
-        public virtual PostImage PostImage { get; set; }
+        public byte[] PostImage { get; set; }
 
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
