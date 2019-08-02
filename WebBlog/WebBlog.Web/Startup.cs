@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -77,7 +78,6 @@ namespace WebBlog.Web
 
             services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Post>, PostRepository>();
-            services.AddScoped<IRepository<AccountImage>, AccountImageRepository>();
             services.AddScoped<IRepository<CommentOfPost>, CommentOfPostRepository>();
             services.AddScoped<IRepository<CommentToComment>, CommentToCommentRepository>();
             //services.AddScoped<IRepository<PostImage>, PostImageRepository>();
@@ -146,6 +146,17 @@ namespace WebBlog.Web
             };
             var userPassword = Configuration.GetSection("AdminSettings")["UserPassword"];
             var user = await userManager.FindByEmailAsync(Configuration.GetSection("AdminSettings")["UserEmail"]);
+
+            byte[] imageData = null;
+            //TO DO
+            FileStream file = new FileStream($"./wwwroot/images/img_avatar.png", FileMode.Open);
+            var length = file.Length;
+            using (var binaryReader = new BinaryReader(file))
+            {
+                imageData = binaryReader.ReadBytes((int)length);
+            }
+
+            adminUser.AccountImage = imageData;
             if (user == null)
             {
                 var createPowerUser = await userManager.CreateAsync(adminUser, userPassword);

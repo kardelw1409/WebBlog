@@ -9,11 +9,13 @@
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @if (UserManager.GetUserAsync(User).Result != null)
+                @if (UserManager.GetUserAsync(User).Result.AccountImage != null)
                 {
-                    <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                        <img src="/AccountImage/ViewImage/@UserManager.GetUserAsync(User).Result.AccountImageId" width="20" height="20">
-                    </a>
+                    <img style='width:40px; height:40px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(@UserManager.GetUserAsync(User).Result.AccountImage))" />
+                }
+                else
+                {
+                    <img style='width:40px; height:40px;' src="~/images/img_avatar.png" />
                 }
             </li>
             <li>

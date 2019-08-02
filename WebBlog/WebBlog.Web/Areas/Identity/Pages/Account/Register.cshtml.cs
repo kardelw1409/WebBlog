@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +57,11 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
             [Display(Name = "Last name")]
             public string LastName { get; set; }
 
+            /*[Required]
+            [DataType(DataType.Upload)]*/
+            [Display(Name = "Input.AccountImage")]
+            public IFormFile AccountImage { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -83,6 +90,14 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { FirstName = Input.FirstName, LastName = Input.LastName, UserName = Input.UserName, Email = Input.Email };
+
+                byte[] imageData = null;
+
+                using (var binaryReader = new BinaryReader(Input.AccountImage.OpenReadStream()))
+                {
+                    imageData = binaryReader.ReadBytes((int)Input.AccountImage.Length);
+                }
+                user.AccountImage = imageData;
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

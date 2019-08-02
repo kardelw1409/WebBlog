@@ -1,4 +1,4 @@
-﻿@model WebBlog.ApplicationCore.Entities.Post
+﻿@model WebBlog.Web.Models.PostViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -26,13 +26,14 @@
                 <input type="hidden" asp-for="ApplicationUserId" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
+                <label asp-for="CategoryId" class="control-label">Category</label>
                 <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PostImage" class="control-label"></label>
                 <input asp-for="PostImage" type="file" name="PostImage" class="form-control" />
+                <span asp-validation-for="PostImage" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">

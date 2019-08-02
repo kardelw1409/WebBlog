@@ -63,6 +63,7 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Create()
         {
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName");
+
             return View();
         }
 
@@ -86,7 +87,7 @@ namespace WebBlog.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var postId = await postRepository.Create(post);
+                await postRepository.Create(post);
                 return RedirectToAction("Index");
             }
             ViewBag["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
@@ -107,8 +108,10 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
+            var postView = new PostViewModel { Id = post.Id, Title = post.Title, ApplicationUserId = post.ApplicationUserId,
+                CategoryId = post.CategoryId, Content = post.Content };
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
-            return View(post);
+            return View(postView);
         }
 
         // POST: Posts/Edit/5
@@ -117,7 +120,8 @@ namespace WebBlog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CategoryId,PostImage,Id")] PostViewModel postView)
         {
-            var post = new Post { Id = postView.Id, Title = postView.Title, ApplicationUserId = postView.ApplicationUserId, Content = postView.Content, CategoryId = postView.CategoryId };
+            var post = new Post { Id = postView.Id, Title = postView.Title, ApplicationUserId = postView.ApplicationUserId,
+                Content = postView.Content, CategoryId = postView.CategoryId };
             if (id != post.Id)
             {
                 return NotFound();

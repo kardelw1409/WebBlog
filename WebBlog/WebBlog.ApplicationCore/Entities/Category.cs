@@ -6,9 +6,10 @@ namespace WebBlog.ApplicationCore.Entities
 {
     public class Category : Entity
     {
+        [Required]
         public string CategoryName { get; set; }
-
-        public string Discraption { get; set; }
+        [Required]
+        public string Discription { get; set; }
 
         public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
