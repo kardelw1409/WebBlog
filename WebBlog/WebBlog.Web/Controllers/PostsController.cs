@@ -19,7 +19,6 @@ using WebBlog.Web.Models;
 
 namespace WebBlog.Web.Controllers
 {
-    [Authorize]
     public class PostsController : Controller
     {
         private IRepository<Post> postRepository;
@@ -58,7 +57,7 @@ namespace WebBlog.Web.Controllers
 
             return View(post);
         }
-
+        [Authorize]
         // GET: Posts/Create
         public async Task<IActionResult> Create()
         {
@@ -67,6 +66,7 @@ namespace WebBlog.Web.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,PostImage")] PostViewModel postView)
@@ -94,6 +94,7 @@ namespace WebBlog.Web.Controllers
             return View(post);
         }
 
+        [Authorize]
         // GET: Posts/Edit/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
@@ -115,7 +116,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // POST: Posts/Edit/5
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CategoryId,PostImage,Id")] PostViewModel postView)
@@ -162,7 +163,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // GET: Posts/Delete/5
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -180,6 +181,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // POST: Posts/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
