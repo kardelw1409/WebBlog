@@ -19,10 +19,10 @@
                 @Html.DisplayNameFor(model => model.CreateTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UpdateTime)
+                @Html.DisplayNameFor(model => model.LastModifiedTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+                @Html.DisplayNameFor(model => model.User.UserName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Category.CategoryName)
@@ -43,10 +43,10 @@
                 @Html.DisplayFor(modelItem => item.CreateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UpdateTime)
+                @Html.DisplayFor(modelItem => item.LastModifiedTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                @Html.DisplayFor(modelItem => item.User.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category.CategoryName)

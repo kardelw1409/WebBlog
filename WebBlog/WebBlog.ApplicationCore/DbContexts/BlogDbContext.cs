@@ -35,7 +35,7 @@ namespace WebBlog.ApplicationCore.DbContexts
                 {
                     Id = 1,
                     CategoryName = "Sport",
-                    Discription = "A sport is commonly defined as an athletic activity that " +
+                    Description = "A sport is commonly defined as an athletic activity that " +
                 "involves a degree of competition, such as tennis or basketball. " +
                 "Some games and many kinds of racing are called sports. " +
                 "A professional at a sport is called an athlete. Many people play sports with their friends."
@@ -44,7 +44,7 @@ namespace WebBlog.ApplicationCore.DbContexts
                 {
                     Id = 2,
                     CategoryName = "Nature",
-                    Discription = "Natural World. Natural World refers to the 'Natural Environment' " +
+                    Description = "Natural World. Natural World refers to the 'Natural Environment' " +
                     "that surrounds us in various forms like the earth, sun, moon, stars, forests, rivers, " +
                     "animals etc. It can be described as the Earth's environment which includes everything " +
                     "which is not man made and / or which has not been substantially altered by Humans."

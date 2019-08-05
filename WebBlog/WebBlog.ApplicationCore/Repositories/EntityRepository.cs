@@ -57,7 +57,7 @@ namespace WebBlog.ApplicationCore.Repositories
             var entityItem = await dbContext.Set<TEntity>().SingleOrDefaultAsync(p => p.Id == entity.Id);
             if (entityItem != null)
             {
-                dbContext.Entry(entityItem).CurrentValues.SetValues(entity);
+                dbContext.Update(entity);
                 await dbContext.SaveChangesAsync();
             }
 

@@ -9,7 +9,7 @@ namespace WebBlog.ApplicationCore.Entities
         [Required]
         public string CategoryName { get; set; }
         [Required]
-        public string Discription { get; set; }
+        public string Description { get; set; }
 
         public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
         public virtual ICollection<Post> Posts { get; set; }

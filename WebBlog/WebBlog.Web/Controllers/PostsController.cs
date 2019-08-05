@@ -72,9 +72,9 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,PostImage")] PostViewModel postView)
         {
             var post = new Post { Title = postView.Title, Content = postView.Content, CategoryId = postView.CategoryId };
-            post.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.CreateTime = DateTime.Now;
-            post.UpdateTime = DateTime.Now;
+            post.LastModifiedTime = DateTime.Now;
 
             byte[] imageData = null;
 
@@ -107,7 +107,7 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
-            var postView = new PostViewModel { Id = post.Id, Title = post.Title, ApplicationUserId = post.ApplicationUserId,
+            var postView = new PostViewModel { Id = post.Id, Title = post.Title, UserId = post.UserId,
                 CategoryId = post.CategoryId, Content = post.Content };
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(postView);
@@ -119,14 +119,14 @@ namespace WebBlog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CategoryId,PostImage,Id")] PostViewModel postView)
         {
-            var post = new Post { Id = postView.Id, Title = postView.Title, ApplicationUserId = postView.ApplicationUserId,
+            var post = new Post { Id = postView.Id, Title = postView.Title, UserId = postView.UserId,
                 Content = postView.Content, CategoryId = postView.CategoryId };
             if (id != post.Id)
             {
                 return NotFound();
             }
-            post.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            post.UpdateTime = DateTime.Now;
+            post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            post.LastModifiedTime = DateTime.Now;
 
             byte[] imageData = null;
 

@@ -17,11 +17,11 @@ namespace WebBlog.ApplicationCore.Entities
         public DateTime CreateTime { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime UpdateTime { get; set; }
+        public DateTime LastModifiedTime { get; set; }
         public byte[] PostImage { get; set; }
 
-        public string ApplicationUserId { get; set; }
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public string UserId { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
 
         public int CategoryId { get; set; }
