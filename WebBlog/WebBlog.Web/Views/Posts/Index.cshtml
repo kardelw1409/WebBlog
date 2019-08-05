@@ -40,10 +40,10 @@
                 </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreateTime)
+                @item.CreateTime.ToString()
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LastModifiedTime)
+                @item.LastModifiedTime.ToString()
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User.UserName)

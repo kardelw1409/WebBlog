@@ -20,6 +20,7 @@ namespace WebBlog.Web.Models
         [Display(Name = "Content")]
         public string Content { get; set; }
         public string UserId { get; set; }
+        public DateTime CreateTime { get; set; }
         public DateTime LastModifiedTime { get; set; }
 
         [Required(ErrorMessage = "Please Upload File")]

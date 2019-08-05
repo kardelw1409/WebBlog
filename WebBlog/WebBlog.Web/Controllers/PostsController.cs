@@ -108,7 +108,7 @@ namespace WebBlog.Web.Controllers
                 return NotFound();
             }
             var postView = new PostViewModel { Id = post.Id, Title = post.Title, UserId = post.UserId,
-                CategoryId = post.CategoryId, Content = post.Content };
+                CategoryId = post.CategoryId, Content = post.Content, CreateTime = post.CreateTime };
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(postView);
         }
@@ -117,10 +117,11 @@ namespace WebBlog.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Content,CategoryId,PostImage,Id")] PostViewModel postView)
+        public async Task<IActionResult> Edit(int? id, [Bind("Title,Content,CategoryId,CreateTime,PostImage,Id")] PostViewModel postView)
         {
             var post = new Post { Id = postView.Id, Title = postView.Title, UserId = postView.UserId,
-                Content = postView.Content, CategoryId = postView.CategoryId };
+                Content = postView.Content, CategoryId = postView.CategoryId, CreateTime = postView.CreateTime
+            };
             if (id != post.Id)
             {
                 return NotFound();

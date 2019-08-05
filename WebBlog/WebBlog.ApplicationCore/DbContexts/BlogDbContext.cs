@@ -24,7 +24,7 @@ namespace WebBlog.ApplicationCore.DbContexts
         public DbSet<Category> Categories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    => optionsBuilder.UseLazyLoadingProxies();
+            => optionsBuilder.UseLazyLoadingProxies();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

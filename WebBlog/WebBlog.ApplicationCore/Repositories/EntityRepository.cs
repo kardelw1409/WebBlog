@@ -22,7 +22,7 @@ namespace WebBlog.ApplicationCore.Repositories
         {
             await dbContext.Set<TEntity>().AddAsync(entity);
             await dbContext.SaveChangesAsync();
-            return entity.Id; 
+            return entity.Id;
         }
 
         public async Task<TEntity> Remove(int? id)
@@ -54,13 +54,8 @@ namespace WebBlog.ApplicationCore.Repositories
 
         public async Task Update(TEntity entity)
         {
-            var entityItem = await dbContext.Set<TEntity>().SingleOrDefaultAsync(p => p.Id == entity.Id);
-            if (entityItem != null)
-            {
-                dbContext.Update(entity);
-                await dbContext.SaveChangesAsync();
-            }
-
+            dbContext.Update(entity);
+            await dbContext.SaveChangesAsync();
         }
 
         public void Dispose()

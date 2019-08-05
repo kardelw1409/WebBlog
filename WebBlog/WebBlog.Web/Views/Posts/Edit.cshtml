@@ -31,6 +31,11 @@
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="CreateTime" class="control-label"></label>
+                <input asp-for="CreateTime" class="form-control" readonly/>
+                <span asp-validation-for="CreateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="PostImage" class="control-label"></label>
                 <input asp-for="PostImage" type="file" name="PostImage" class="form-control" />
                 <span asp-validation-for="PostImage" class="text-danger"></span>
