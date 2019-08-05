@@ -19,7 +19,14 @@ namespace WebBlog.Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var postList = await postRepository.GetAll();
+            var postList = (List<Post>)await postRepository.GetAll();
+            if (postList.Count > 5)
+            {
+                postList = (from t in postList
+                            orderby t.CreateTime
+                            select t).Take(5).ToList();
+            }
+
             return View(postList);
         }
 
