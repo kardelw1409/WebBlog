@@ -94,8 +94,6 @@ namespace WebBlog.Web.Controllers
             return View(post);
         }
 
-        [Authorize]
-        // GET: Posts/Edit/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {

@@ -1,0 +1,18 @@
+﻿@model  WebBlog.Web.Models.ImageViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Change Avatar</h2>
+<form asp-action="ChangeAvatar" asp-controller="Account" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="AvatarImage" class="control-label"></label>
+        <input asp-for="AvatarImage" type="file" name="AvatarImage" class="form-control" />
+        <span asp-validation-for="AvatarImage" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+</form>
+

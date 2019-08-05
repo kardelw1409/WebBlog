@@ -10,10 +10,7 @@
     <div class="row">
         <div class="col-md-3">
             <partial name="_ManageNav" />
-            @if (User.Identity.IsAuthenticated)
-            {
-                <a asp-area="" asp-controller="AccountImage" asp-action="Index">Avatar</a>
-            }
+
         </div>
         <div class="col-md-9">
             @RenderBody()

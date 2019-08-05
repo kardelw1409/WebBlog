@@ -4,13 +4,19 @@
 }
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
-    <ol class="carousel-indicators">
+    <!--ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
         <li data-target="#myCarousel" data-slide-to="2"></li>
         <li data-target="#myCarousel" data-slide-to="3"></li>
-    </ol>
+    </ol-->
     <div-- class="carousel-inner" role="listbox">
+        <ol class="carousel-indicators">
+            @for (var i = 1; i < Model.Count(); i++)
+            {
+                <li data-target="#myCarousel" data-slide-to="@i" class="active"></li>
+            }
+        </ol>
         @{
             int counter = 0;
         }
@@ -18,7 +24,7 @@
         {
             counter++;
             <div class="@(counter == 1 ? "item active":"item")">
-                <img style='width:1140px; height:360px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="ASP.NET" class="img-responsive" />
+                <img style="width:1100px; height:340px;" src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="ASP.NET" class="img-responsive" />
                 <div class="carousel-caption" role="option">
                     <p>
                         @item.Title
@@ -30,6 +36,8 @@
                 </div>
             </div>
         }
+
+
         <!--div class="item active">
             <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
             <div class="carousel-caption" role="option">
@@ -64,6 +72,7 @@
             </div>
         </div>
     </div-->
+
         <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
