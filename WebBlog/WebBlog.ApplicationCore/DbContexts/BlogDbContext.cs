@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using WebBlog.ApplicationCore.Entities;
 using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
@@ -12,6 +14,9 @@ namespace WebBlog.ApplicationCore.DbContexts
 {
     public class BlogDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
+        public static readonly LoggerFactory MyLoggerFactory
+            = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
+
         public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options)
         {
 
@@ -24,7 +29,9 @@ namespace WebBlog.ApplicationCore.DbContexts
         public DbSet<Category> Categories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseLazyLoadingProxies();
+            => optionsBuilder
+                .UseLoggerFactory(MyLoggerFactory)
+                .UseLazyLoadingProxies();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
