@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using WebBlog.ApplicationCore.Entities.AbstractEntities;
-using WebBlog.ApplicationCore.Interfaces;
+using WebBlog.ApplicationCore.Repositories;
 using WebBlog.ApplicationCore.DbContexts;
 using System.Linq;
 
@@ -18,7 +18,7 @@ namespace WebBlog.ApplicationCore.Repositories
         {
             dbContext = contex;
         }
-        public async Task<int?> Create(TEntity entity)
+        public async Task<int> Create(TEntity entity)
         {
             await dbContext.Set<TEntity>().AddAsync(entity);
             await dbContext.SaveChangesAsync();
@@ -30,7 +30,7 @@ namespace WebBlog.ApplicationCore.Repositories
             var entityItem = await FindById(id);
             if (entityItem == null)
             {
-                throw new NullReferenceException("Data not find");
+                throw new NullReferenceException("Data not found.");
             }
             dbContext.Set<TEntity>().Remove(entityItem);
             await dbContext.SaveChangesAsync();
@@ -39,6 +39,10 @@ namespace WebBlog.ApplicationCore.Repositories
 
         public async Task<TEntity> FindById(int? id)
         {
+            if (id == null)
+            {
+                throw new NullReferenceException("id is null.");
+            }
             return await dbContext.Set<TEntity>().FindAsync(id);
         }
 

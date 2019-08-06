@@ -16,7 +16,6 @@ using Microsoft.Extensions.DependencyInjection;
 using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
 using WebBlog.ApplicationCore.Entities.AbstractEntities;
-using WebBlog.ApplicationCore.Interfaces;
 using WebBlog.ApplicationCore.Repositories;
 
 namespace WebBlog.Web

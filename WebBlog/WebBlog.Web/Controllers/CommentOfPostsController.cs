@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
-using WebBlog.ApplicationCore.Interfaces;
+using WebBlog.ApplicationCore.Repositories;
 
 namespace WebBlog.Web.Controllers
 {
@@ -30,7 +30,7 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Index(int id)
         {
             var post = await postRepository.FindById(id);
-            var listComments = post.CommentOfPosts;
+            var listComments = post.CommentsOfPost;
             ViewBag.PostId = id;
             return View(listComments);
         }

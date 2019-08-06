@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
-using WebBlog.ApplicationCore.Interfaces;
+using WebBlog.ApplicationCore.Repositories;
 
 namespace WebBlog.Web.Controllers
 {

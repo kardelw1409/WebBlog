@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using WebBlog.ApplicationCore.Entities;
 using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
-namespace WebBlog.ApplicationCore.Interfaces
+namespace WebBlog.ApplicationCore.Repositories
 {
     public interface IRepository<TEntity> : IDisposable 
         where TEntity : Entity
     {
-        Task<int?> Create(TEntity entity);
+        Task<int> Create(TEntity entity);
         Task<TEntity> FindById(int? id);
         Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity> Remove(int? id);

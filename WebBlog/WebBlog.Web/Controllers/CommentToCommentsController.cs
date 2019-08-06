@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebBlog.ApplicationCore.Entities;
-using WebBlog.ApplicationCore.Interfaces;
+using WebBlog.ApplicationCore.Repositories;
 
 namespace WebBlog.Web.Controllers
 {

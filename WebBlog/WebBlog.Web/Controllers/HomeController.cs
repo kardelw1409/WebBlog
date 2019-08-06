@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebBlog.ApplicationCore.Entities;
-using WebBlog.ApplicationCore.Interfaces;
+using WebBlog.ApplicationCore.Repositories;
 using WebBlog.Web.Models;
 
 namespace WebBlog.Web.Controllers
