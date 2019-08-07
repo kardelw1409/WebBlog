@@ -11,8 +11,8 @@ namespace WebBlog.ApplicationCore.Attributes
     {
         public override bool IsValid(object value)
         {
-            int MaxContentLength = 1024 * 1024 * 2;
-            string[] AllowedFileExtensions = new string[] { ".jpg", ".gif", ".png" };
+            int maxContentLength = 1024 * 1024;
+            string[] allowedFileExtensions = new string[] { ".jpg", ".gif", ".png" };
 
             var file = value as IFormFile;
 
@@ -21,18 +21,18 @@ namespace WebBlog.ApplicationCore.Attributes
                 ErrorMessage = "Please upload your image for post!";
                 return false;
             } 
-            else if (!AllowedFileExtensions.Contains((file != null) ?
+            else if (!allowedFileExtensions.Contains((file != null) ?
                 file.FileName.Substring(file.FileName.LastIndexOf('.')).ToLower()
                 : string.Empty))
             {
-                ErrorMessage = "Please upload Your Photo of type: " +
-                    string.Join(", ", AllowedFileExtensions);
+                ErrorMessage = "Please upload image of type: " +
+                    string.Join(", ", allowedFileExtensions);
                 return false;
             }
-            else if (file.Length > MaxContentLength)
+            else if (file.Length > maxContentLength)
             {
-                ErrorMessage = "Your Photo is too large, maximum allowed size is : "
-                    + (MaxContentLength / 1024).ToString() + "MB";
+                ErrorMessage = "Your image is too large, maximum allowed size is : "
+                    + (maxContentLength / 1024).ToString() + "KB";
                 return false;
             }
             else

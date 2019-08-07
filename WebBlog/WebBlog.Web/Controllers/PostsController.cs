@@ -76,22 +76,21 @@ namespace WebBlog.Web.Controllers
             post.CreateTime = DateTime.Now;
             post.LastModifiedTime = DateTime.Now;
 
-            byte[] imageData = null;
-
-            using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
-            {
-                imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
-            }
-
-            post.PostImage = imageData;
-
             if (ModelState.IsValid)
             {
+                byte[] imageData = null;
+
+                using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+                {
+                    imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
+                }
+                post.PostImage = imageData;
+
                 await postRepository.Create(post);
                 return RedirectToAction("Index");
             }
-            ViewBag["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
-            return View(post);
+            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
+            return View(postView);
         }
 
         [Authorize(Roles = "Admin")]
@@ -107,8 +106,15 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
-            var postView = new PostViewModel { Id = post.Id, Title = post.Title, UserId = post.UserId,
-                CategoryId = post.CategoryId, Content = post.Content, CreateTime = post.CreateTime };
+            var postView = new PostViewModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                UserId = post.UserId,
+                CategoryId = post.CategoryId,
+                Content = post.Content,
+                CreateTime = post.CreateTime
+            };
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(postView);
         }
@@ -119,8 +125,14 @@ namespace WebBlog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, [Bind("Title,Content,CategoryId,CreateTime,PostImage,Id")] PostViewModel postView)
         {
-            var post = new Post { Id = postView.Id, Title = postView.Title, UserId = postView.UserId,
-                Content = postView.Content, CategoryId = postView.CategoryId, CreateTime = postView.CreateTime
+            var post = new Post
+            {
+                Id = postView.Id,
+                Title = postView.Title,
+                UserId = postView.UserId,
+                Content = postView.Content,
+                CategoryId = postView.CategoryId,
+                CreateTime = postView.CreateTime
             };
             if (id != post.Id)
             {
@@ -129,18 +141,19 @@ namespace WebBlog.Web.Controllers
             post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.LastModifiedTime = DateTime.Now;
 
-            byte[] imageData = null;
-
-            using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
-            {
-                imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
-            }
-
-            post.PostImage = imageData;
             if (ModelState.IsValid)
             {
                 try
                 {
+
+                    byte[] imageData = null;
+
+                    using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+                    {
+                        imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
+                    }
+
+                    post.PostImage = imageData;
                     await postRepository.Update(post);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -158,7 +171,7 @@ namespace WebBlog.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
-            return View(post);
+            return View(postView);
         }
 
         // GET: Posts/Delete/5

@@ -18,6 +18,7 @@ namespace WebBlog.ApplicationCore.Entities
 
         [DataType(DataType.Date)]
         public DateTime LastModifiedTime { get; set; }
+
         public byte[] PostImage { get; set; }
 
         public string UserId { get; set; }

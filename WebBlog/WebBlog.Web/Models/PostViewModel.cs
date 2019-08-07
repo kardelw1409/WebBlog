@@ -23,7 +23,7 @@ namespace WebBlog.Web.Models
         public DateTime CreateTime { get; set; }
         public DateTime LastModifiedTime { get; set; }
 
-        [Required(ErrorMessage = "Please Upload File")]
+        [ValidateImage]
         [Display(Name = "PostImage")]
         public IFormFile PostImage { get; set; }
         public int CategoryId { get; set; }

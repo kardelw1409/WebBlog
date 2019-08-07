@@ -14,6 +14,7 @@ namespace WebBlog.ApplicationCore.DbContexts
 {
     public class BlogDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
+        [Obsolete]
         public static readonly LoggerFactory MyLoggerFactory
             = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
 
@@ -30,7 +31,7 @@ namespace WebBlog.ApplicationCore.DbContexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
-                .UseLoggerFactory(MyLoggerFactory)
+                //.UseLoggerFactory(MyLoggerFactory)
                 .UseLazyLoadingProxies();
 
         protected override void OnModelCreating(ModelBuilder builder)
