@@ -23,14 +23,14 @@ namespace WebBlog.Web.Controllers
     {
         private IRepository<Post> postRepository;
         private IRepository<Category> categoryRepository;
-        private IRepository<CommentOfPost> commentOfPostsRepository;
+        private IRepository<Comments> commentRepository;
 
         public PostsController(IRepository<Post> postRepository, IRepository<Category> categoryRepository,
-            IRepository<CommentOfPost> commentOfPostsRepository)
+            IRepository<Comments> commentRepository)
         {
             this.postRepository = postRepository;
             this.categoryRepository = categoryRepository;
-            this.commentOfPostsRepository = commentOfPostsRepository;
+            this.commentRepository = commentRepository;
 
         }
 
@@ -200,12 +200,12 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await postRepository.Remove(id);
-            var commentsListForDelete = new List<CommentOfPost>(await commentOfPostsRepository.Get((commentOfPost) => id == commentOfPost.PostId));
+            var commentsListForDelete = new List<Comments>(await commentRepository.Get((commentOfPost) => id == commentOfPost.PostId));
             if (commentsListForDelete.Count != 0)
             {
                 foreach (var count in commentsListForDelete)
                 {
-                    await commentOfPostsRepository.Remove(count.Id);
+                    await commentRepository.Remove(count.Id);
                 }
             }
             return RedirectToAction(nameof(Index));

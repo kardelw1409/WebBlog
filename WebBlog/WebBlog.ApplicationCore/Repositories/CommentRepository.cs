@@ -6,9 +6,9 @@ using WebBlog.ApplicationCore.DbContexts;
 
 namespace WebBlog.ApplicationCore.Repositories
 {
-    public class CommentOfPostRepository : EntityRepository<CommentOfPost>
+    public class CommentRepository : EntityRepository<Comments>
     {
-        public CommentOfPostRepository(BlogDbContext contex) : base(contex)
+        public CommentRepository(BlogDbContext contex) : base(contex)
         {
         }
     }

@@ -1,4 +1,4 @@
-﻿@model WebBlog.ApplicationCore.Entities.CommentToComment
+﻿@model WebBlog.ApplicationCore.Entities.Comments
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,7 +12,7 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.CommentOfPost)
+            @Html.DisplayNameFor(model => model.ParentComment)
         </dt>
         <dt>
             @Html.DisplayNameFor(model => model.Content)
@@ -27,16 +27,16 @@
             @Html.DisplayFor(model => model.CreateTime)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ApplicationUser)
+            @Html.DisplayNameFor(model => model.User)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ApplicationUser.UserName)
+            @Html.DisplayFor(model => model.User.UserName)
         </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index" asp-route-id="@Model.CommentOfPostId">Back to Comment</a>
+        <a asp-action="Index" asp-route-id="@Model.ParentCommentId">Back to Comment</a>
     </form>
 </div>

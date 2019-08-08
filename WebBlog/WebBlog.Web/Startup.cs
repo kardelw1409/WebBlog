@@ -77,8 +77,7 @@ namespace WebBlog.Web
 
             services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Post>, PostRepository>();
-            services.AddScoped<IRepository<CommentOfPost>, CommentOfPostRepository>();
-            services.AddScoped<IRepository<CommentToComment>, CommentToCommentRepository>();
+            services.AddScoped<IRepository<Comments>, CommentRepository>();
 
         }
 

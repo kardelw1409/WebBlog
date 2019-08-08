@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebBlog.ApplicationCore.Entities.CommentToComment>
+﻿@model IEnumerable<WebBlog.ApplicationCore.Entities.Comments>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.CreateTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser)
+                @Html.DisplayNameFor(model => model.User)
             </th>
             <th></th>
         </tr>
@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.CreateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                @Html.DisplayFor(modelItem => item.User.UserName)
             </td>
             <td>
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
@@ -44,5 +44,5 @@
     </tbody>
 </table>
 <div>
-    <a asp-controller="CommentOfPosts" asp-action="Index" asp-route-id="@ViewBag.PostId">Back to Comment</a>
+    <a asp-controller="Comment" asp-action="Index" asp-route-id="@ViewBag.PostId">Back to Comment</a>
 </div>

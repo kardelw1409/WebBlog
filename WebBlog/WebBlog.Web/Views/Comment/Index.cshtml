@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebBlog.ApplicationCore.Entities.CommentOfPost>
+﻿@model IEnumerable<WebBlog.ApplicationCore.Entities.Comments>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.CreateTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser)
+                @Html.DisplayNameFor(model => model.User)
             </th>
             <th></th>
         </tr>
@@ -36,7 +36,7 @@
                 @Html.DisplayFor(modelItem => item.CreateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                @Html.DisplayFor(modelItem => item.User.UserName)
             </td>
             @if (User.Identity.IsAuthenticated)
             {

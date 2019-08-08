@@ -14,29 +14,29 @@ using WebBlog.ApplicationCore.Repositories;
 namespace WebBlog.Web.Controllers
 {
     [Authorize]
-    public class CommentOfPostsController : Controller
+    public class CommentController : Controller
     {
         private IRepository<Post> postRepository;
-        private IRepository<CommentOfPost> commentOfPostRepository;
+        private IRepository<Comments> commentRepository;
 
-        public CommentOfPostsController(IRepository<Post> postRepository, IRepository<CommentOfPost> commentOfPostRepository)
+        public CommentController(IRepository<Post> postRepository, IRepository<Comments> commentRepository)
         {
             this.postRepository = postRepository;
-            this.commentOfPostRepository = commentOfPostRepository;
+            this.commentRepository = commentRepository;
         }
 
         // GET: CommentOfPosts
-        [Route("~/CommentOfPosts/Index/{id:int}")]
+        [Route("~/Comment/Index/{id:int}")]
         public async Task<IActionResult> Index(int id)
         {
             var post = await postRepository.FindById(id);
-            var listComments = post.CommentsOfPost;
+            var listComments = post.CommentsOfPost.Where(parent => parent.ParentCommentId == null);
             ViewBag.PostId = id;
             return View(listComments);
         }
 
-        // GET: CommentOfPosts/Create//PostId
-        [Route("~/CommentOfPosts/Create/{id:int}")]
+        // GET: CommentOfPosts/Create/PostId
+        [Route("~/Comment/Create/{id:int}")]
         public IActionResult Create(int id)
         {
             ViewBag.PostId = id;
@@ -46,18 +46,20 @@ namespace WebBlog.Web.Controllers
         // POST: CommentOfPosts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("~/CommentOfPosts/Create/{id:int}")]
-        public async Task<IActionResult> Create([Bind("Content,PostId")] CommentOfPost commentOfPost)
+        [Route("~/Comment/Create/{id:int}")]
+        public async Task<IActionResult> Create([Bind("Content,PostId")] Comments comment)
         {
-            commentOfPost.ApplicationUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            commentOfPost.CreateTime = DateTime.Now;
+            comment.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            comment.CreateTime = DateTime.Now;
             if (ModelState.IsValid)
             {
-                await commentOfPostRepository.Create(commentOfPost);
-                return RedirectToRoute("default", new { controller = "CommentOfPosts", action = "Index",  id = commentOfPost.PostId } );
+                await commentRepository.Create(comment);
+                return RedirectToRoute("default", new { controller = "Comment", action = "Index",  id = comment.PostId } );
             }
-            return View(commentOfPost);
+            return View(comment);
         }
+
+
 
         // GET: CommentOfPosts/Delete/5
         [Authorize(Roles = "Admin")]
@@ -68,7 +70,7 @@ namespace WebBlog.Web.Controllers
                 return NotFound();
             }
 
-            var commentOfPost = await commentOfPostRepository.FindById(id);
+            var commentOfPost = await commentRepository.FindById(id);
             if (commentOfPost == null)
             {
                 return NotFound();
@@ -82,14 +84,23 @@ namespace WebBlog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var commentOfPost = await commentOfPostRepository.FindById(id);
-            await commentOfPostRepository.Remove(id);
-            return RedirectToRoute("default", new { controller = "CommentOfPosts", action = "Index", id = commentOfPost.PostId });
+            var commentOfPost = await commentRepository.FindById(id);
+            var commentIdForDelete = new List<int>();
+            foreach (var child in commentOfPost.Children)
+            {
+                commentIdForDelete.Add(child.Id);
+            }
+            foreach (var count in commentIdForDelete)
+            {
+                await commentRepository.Remove(count);
+            }
+            await commentRepository.Remove(id);
+            return RedirectToRoute("default", new { controller = "Comment", action = "Index", id = commentOfPost.PostId });
         }
 
         private async Task<bool> PostExists(int id)
         {
-            return (await commentOfPostRepository.GetAll()).Any(e => e.Id == id);
+            return (await commentRepository.GetAll()).Any(e => e.Id == id);
         }
     }
 }

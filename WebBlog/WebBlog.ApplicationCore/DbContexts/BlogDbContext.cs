@@ -23,9 +23,8 @@ namespace WebBlog.ApplicationCore.DbContexts
 
         }
 
-        public DbSet<CommentToComment> CommentToComments { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<CommentOfPost> CommentOfPosts { get; set; }
+        public DbSet<Comments> Comments { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
 

@@ -1,4 +1,4 @@
-﻿@model WebBlog.ApplicationCore.Entities.CommentOfPost
+﻿@model WebBlog.ApplicationCore.Entities.Comments
 
 @{
     ViewData["Title"] = "Delete";
@@ -30,10 +30,10 @@
             @Html.DisplayFor(model => model.CreateTime)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ApplicationUser)
+            @Html.DisplayNameFor(model => model.User)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ApplicationUser.UserName)
+            @Html.DisplayFor(model => model.User.UserName)
         </dd>
 
     </dl>
