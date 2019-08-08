@@ -23,10 +23,10 @@ namespace WebBlog.Web.Controllers
     {
         private IRepository<Post> postRepository;
         private IRepository<Category> categoryRepository;
-        private IRepository<Comments> commentRepository;
+        private IRepository<Comment> commentRepository;
 
         public PostsController(IRepository<Post> postRepository, IRepository<Category> categoryRepository,
-            IRepository<Comments> commentRepository)
+            IRepository<Comment> commentRepository)
         {
             this.postRepository = postRepository;
             this.categoryRepository = categoryRepository;
@@ -48,17 +48,20 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
-
+            var postAndComments = new PostWithCommentsViewModel();
             var post = await postRepository.FindById(id);
             if (post == null)
             {
                 return NotFound();
             }
+            postAndComments.Post = post;
+            postAndComments.Comments = await commentRepository.Get(p => p.PostId == id);
 
-            return View(post);
+            return View(postAndComments);
         }
-        [Authorize]
+
         // GET: Posts/Create
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName");
@@ -200,7 +203,7 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await postRepository.Remove(id);
-            var commentsListForDelete = new List<Comments>(await commentRepository.Get((commentOfPost) => id == commentOfPost.PostId));
+            var commentsListForDelete = new List<Comment>(await commentRepository.Get((commentOfPost) => id == commentOfPost.PostId));
             if (commentsListForDelete.Count != 0)
             {
                 foreach (var count in commentsListForDelete)

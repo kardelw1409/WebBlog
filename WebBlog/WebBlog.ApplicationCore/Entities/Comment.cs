@@ -6,7 +6,7 @@ using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
 namespace WebBlog.ApplicationCore.Entities
 {
-    public class Comments : Entity
+    public class Comment : Entity
     {
         [Required]
         public string Content { get; set; }
@@ -20,9 +20,9 @@ namespace WebBlog.ApplicationCore.Entities
         public virtual Post Post { get; set; }
 
         public int? ParentCommentId { get; set; }
-        public virtual Comments ParentComment { get; set; }
+        public virtual Comment ParentComment { get; set; }
 
-        public virtual ICollection<Comments> Children { get; set; }
+        public virtual ICollection<Comment> Children { get; set; }
 
     }
 }

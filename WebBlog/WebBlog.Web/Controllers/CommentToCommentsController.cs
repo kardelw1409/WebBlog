@@ -12,9 +12,9 @@ namespace WebBlog.Web.Controllers
 {
     public class CommentToCommentsController : Controller
     {
-        private IRepository<Comments> commentRepository;
+        private IRepository<Comment> commentRepository;
 
-        public CommentToCommentsController(IRepository<Comments> commentRepository)
+        public CommentToCommentsController(IRepository<Comment> commentRepository)
         {
             this.commentRepository = commentRepository;
         }
@@ -42,7 +42,7 @@ namespace WebBlog.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("~/CommentToComments/Create/{id:int}")]
-        public async Task<IActionResult> Create([Bind("Content,ParentCommentId")] Comments comment)
+        public async Task<IActionResult> Create([Bind("Content,ParentCommentId")] Comment comment)
         {
             var parentComment = await commentRepository.FindById(comment.ParentCommentId);
             comment.PostId = parentComment.PostId;

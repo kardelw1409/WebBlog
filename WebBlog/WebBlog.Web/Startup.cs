@@ -77,7 +77,7 @@ namespace WebBlog.Web
 
             services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Post>, PostRepository>();
-            services.AddScoped<IRepository<Comments>, CommentRepository>();
+            services.AddScoped<IRepository<Comment>, CommentRepository>();
 
         }
 
@@ -110,6 +110,11 @@ namespace WebBlog.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "commentRoute",
+                    template: "{controller}/{action}/{postId}/{id}"
+);
             });
             CreateUserRoles(provider).Wait();
         }

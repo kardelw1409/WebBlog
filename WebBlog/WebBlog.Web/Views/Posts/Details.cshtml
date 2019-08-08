@@ -1,29 +1,23 @@
-﻿@model WebBlog.ApplicationCore.Entities.Post
+﻿@model WebBlog.Web.Models.PostWithCommentsViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2>@Html.DisplayFor(model => model.Title)</h2>
-<h5>Author: @Html.DisplayFor(model => model.User.UserName) </h5>
+<h2>@Html.DisplayFor(model => model.Post.Title)</h2>
+<h5>Author: @Html.DisplayFor(model => model.Post.User.UserName) </h5>
+<h5>Category: @Html.DisplayFor(model => model.Post.Category.CategoryName) </h5>
 <div>
     <hr />
 
-    @if (Model.PostImage != null)
+    @if (Model.Post.PostImage != null)
     {
-        <img style='width:1000px; height:650px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.PostImage))" />
+        <img style='width:900px; height:585px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Post.PostImage))" />
     }
-    <p>
-        @Html.DisplayFor(model => model.Content)
+    <p class="font-weight-normal">
+
+        @Html.DisplayFor(model => model.Post.Content)
     </p>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Category.CategoryName)
-        </dd>
-    </dl>
 </div>
 
 
@@ -31,8 +25,110 @@
 
 
 <div>
-    <a asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Id">Show comments</a> |
-    <a asp-controller="Comment" asp-action="Create" asp-route-id="@Model.Id">Add comment</a> |
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Post.Id">Show comments</a> |
+    <a asp-controller="Comment" asp-action="Create" asp-route-id="@Model.Post.Id">Add comment</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Post.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-offset-0">
+        <form asp-controller="Comment" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group purple-border">
+                <label asp-for="Comment.Content" class="control-label"></label>
+                <textarea asp-for="Comment.Content" class="form-control" rows="7"></textarea>
+                <span asp-validation-for="Comment.Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Comment.PostId" type="hidden" value="@Model.Post.Id" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit comment" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1" id="logout">
+
+            <div class="comment-tabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#comments-logout" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Comments</h4></a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="comments-logout">
+                        <ul class="media-list">
+                            @foreach (var comment in Model.Comments)
+                            {
+                                if (comment.ParentCommentId == null)
+                                {
+                                    bool isChildren = false;
+                                    var countChildren = comment.Children.Count;
+
+                                    <li class="media">
+                                        <a class="pull-left" href="#">
+                                            <img style='width:50px; height:50px;' class="media-object img-circle" src="data:image/jpeg;base64,@(Convert.ToBase64String(comment.User.AccountImage))" alt="profile">
+                                        </a>
+                                        <div class="media-body">
+                                            <div class="well well-lg">
+                                                <h4 class="media-heading text-uppercase reviews">@comment.User.UserName</h4>
+                                                <ul class="media-date text-uppercase reviews list-inline">
+                                                    <li class="dd">@comment.CreateTime</li>
+                                                </ul>
+                                                <p class="media-comment">
+                                                    @comment.Content
+                                                </p>
+                                                <a class="btn btn-info btn-circle text-uppercase" data-toggle="collapse" href="" id="reply"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
+                                                <a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="@(countChildren != 0 ? "#" + comment.Id : "")"><span class="glyphicon glyphicon-comment">@countChildren</span></a>
+                                            </div>
+                                        </div>
+                                        @if (countChildren != 0)
+                                        {
+                                            isChildren = true;
+                                            <div class="collapse" id="@comment.Id">
+                                                <ul class="media-list">
+                                                    @foreach (var childrenComment in comment.Children)
+                                                    {
+                                                        <li class="media media-replied" id="replied">
+                                                            <a class="pull-left" href="#">
+                                                                <img style='width:50px; height:50px;' class="media-object img-circle" src="data:image/jpeg;base64,@(Convert.ToBase64String(childrenComment.User.AccountImage))" alt="profile">
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <div class="well well-lg">
+                                                                    <h4 class="media-heading text-uppercase reviews"><span class="glyphicon glyphicon-share-alt"></span> Mary</h4>
+                                                                    <ul class="media-date text-uppercase reviews list-inline">
+                                                                        <li class="dd">@childrenComment.CreateTime</li>
+                                                                    </ul>
+                                                                    <p class="media-comment">
+                                                                        @childrenComment.Content
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        }
+                                    </li>
+
+
+                                }
+                            }
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>

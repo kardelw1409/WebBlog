@@ -1,10 +1,21 @@
-﻿@model IEnumerable<WebBlog.ApplicationCore.Entities.Comments>
+﻿@model IEnumerable<WebBlog.ApplicationCore.Entities.Comment>
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h2>Index</h2>
+@{
+    bool isParent = true;
+    if (Model.Count() != 0)
+    {
+        if (Model.Cast<WebBlog.ApplicationCore.Entities.Comment>().First().ParentCommentId != null)
+        {
+            isParent = false;
+        }
+    }
+
+}
 
 <p>
     <a asp-action="Create" asp-route-id="@ViewBag.PostId">Create New</a>
@@ -25,34 +36,54 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-controller="CommentToComments" asp-action="Index" asp-route-id="@item.Id">
-                    @Html.DisplayFor(modelItem => item.Content)
-                </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
-            </td>
-            @if (User.Identity.IsAuthenticated)
-            {
-                @if (User.IsInRole("Admin"))
-                {
-                    <td>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                }
-            }
+        @foreach (var item in Model)
+        {
 
-        </tr>
-}
+            <tr>
+                <td>
+                    @if (isParent)
+                    {
+                        <a asp-controller="CommentToComments" asp-action="Index" asp-route-id="@item.Id">
+                            @Html.DisplayFor(modelItem => item.Content)
+                        </a>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.Content)
+                    }
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    }
+                }
+
+            </tr>
+        }
     </tbody>
 </table>
+@if (isParent)
+{
+    <div>
+        <a asp-controller="Posts" asp-action="Details" asp-route-id="@ViewBag.PostId">Back to Post</a>
+    </div>
+}
+else
+{
+    <div>
+        <a asp-controller="Comment" asp-action="Index" asp-route-id="@ViewBag.PostId">Back to Comment</a>
+    </div>
+}
 
-<div>
-    <a asp-controller="Posts" asp-action="Details" asp-route-id="@ViewBag.PostId">Back to Post</a>
-</div>
+
