@@ -51,7 +51,7 @@ namespace WebBlog.Web.Controllers
             if (ModelState.IsValid)
             {
                 await commentRepository.Create(comment);
-                return RedirectToRoute("default", new { controller = "CommentToComments", action = "Index", id = comment.ParentCommentId });
+                return RedirectToRoute("default", new { controller = "Posts", action = "Details", id = comment.PostId });
             }
             return View(comment);
         }

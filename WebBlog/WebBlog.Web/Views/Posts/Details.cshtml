@@ -25,34 +25,38 @@
 
 
 <div>
-    <a asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Post.Id">Show comments</a> |
-    <a asp-controller="Comment" asp-action="Create" asp-route-id="@Model.Post.Id">Add comment</a> |
-    <a asp-action="Edit" asp-route-id="@Model.Post.Id">Edit</a> |
+    @if (User.Identity.IsAuthenticated)
+    {
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Post.Id">Show list comments |</a>
+            <a asp-action="Edit" asp-route-id="@Model.Post.Id">Edit |</a>
+        }
+    }
     <a asp-action="Index">Back to List</a>
 </div>
 
-
-
-<div class="row">
-    <div class="col-md-offset-0">
-        <form asp-controller="Comment" asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group purple-border">
-                <label asp-for="Comment.Content" class="control-label"></label>
-                <textarea asp-for="Comment.Content" class="form-control" rows="7"></textarea>
-                <span asp-validation-for="Comment.Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input asp-for="Comment.PostId" type="hidden" value="@Model.Post.Id" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Submit comment" class="btn btn-default" />
-            </div>
-        </form>
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <div class="col-md-offset-0">
+            <form asp-controller="Comment" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group purple-border">
+                    <label asp-for="Comment.Content" class="control-label"></label>
+                    <textarea asp-for="Comment.Content" class="form-control" rows="7"></textarea>
+                    <span asp-validation-for="Comment.Content" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input asp-for="Comment.PostId" type="hidden" value="@Model.Post.Id" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Submit comment" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-
+}
 
 <div class="container">
     <div class="row">
@@ -85,14 +89,40 @@
                                                 <p class="media-comment">
                                                     @comment.Content
                                                 </p>
-                                                <a class="btn btn-info btn-circle text-uppercase" data-toggle="collapse" href="" id="reply"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
-                                                <a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="@(countChildren != 0 ? "#" + comment.Id : "")"><span class="glyphicon glyphicon-comment">@countChildren</span></a>
+                                                @if (User.Identity.IsAuthenticated)
+                                                {
+                                                    <a class="btn btn-info btn-circle text-uppercase" data-toggle="collapse" href="#@comment.Id" id="reply"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
+                                                }
+                                                <a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="@(countChildren != 0 ? "#children_" + comment.Id : "")"><span class="glyphicon glyphicon-comment">@countChildren</span></a>
                                             </div>
                                         </div>
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <div class="collapsing" id="@comment.Id">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <form asp-controller="CommentToComments" asp-action="Create">
+                                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                            <div class="form-group">
+                                                                <label asp-for="Comment.Content" class="control-label"></label>
+                                                                <textarea asp-for="Comment.Content" class="form-control" cols="40" rows="5"></textarea>
+                                                                <span asp-validation-for="Comment.Content" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input asp-for="Comment.ParentCommentId" type="hidden" value="@comment.Id" class="form-control" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="submit" value="Submit comment" class="btn btn-default" />
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
                                         @if (countChildren != 0)
                                         {
                                             isChildren = true;
-                                            <div class="collapse" id="@comment.Id">
+                                            <div class="collapsing" id="children_@comment.Id">
                                                 <ul class="media-list">
                                                     @foreach (var childrenComment in comment.Children)
                                                     {
@@ -132,3 +162,4 @@
 
 
 </div>
+

@@ -10,11 +10,11 @@ using System.Linq;
 
 namespace WebBlog.ApplicationCore.Repositories
 {
-    public abstract class EntityRepository<TEntity> : IRepository<TEntity>
+    public class RepositoryBase<TEntity> : IRepository<TEntity>
         where TEntity : Entity
     {
         protected BlogDbContext dbContext;
-        public EntityRepository(BlogDbContext contex)
+        public RepositoryBase(BlogDbContext contex)
         {
             dbContext = contex;
         }
