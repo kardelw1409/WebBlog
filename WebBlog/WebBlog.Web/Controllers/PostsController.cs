@@ -72,22 +72,37 @@ namespace WebBlog.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,PostImage")] PostViewModel postView)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,IsImage,PostImage")] PostViewModel postView)
         {
-            var post = new Post { Title = postView.Title, Content = postView.Content, CategoryId = postView.CategoryId };
+            var post = new Post { Title = postView.Title, Content = postView.Content, CategoryId = postView.CategoryId, IsImage = postView.IsImage };
             post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.CreateTime = DateTime.Now;
             post.LastModifiedTime = DateTime.Now;
+            if (!postView.IsImage)
+            {
+                ModelState["PostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
+                byte[] imageData = null;
+                FileStream file = new FileStream($"./wwwroot/images/post.png", FileMode.Open);
+                var length = file.Length;
+                using (var binaryReader = new BinaryReader(file))
+                {
+                    imageData = binaryReader.ReadBytes((int)length);
+                }
 
+                post.PostImage = imageData;
+            }
             if (ModelState.IsValid)
             {
-                byte[] imageData = null;
-
-                using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+                if (postView.IsImage)
                 {
-                    imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
+                    byte[] imageData = null;
+
+                    using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+                    {
+                        imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
+                    }
+                    post.PostImage = imageData;
                 }
-                post.PostImage = imageData;
 
                 await postRepository.Create(post);
                 return RedirectToAction("Index");
@@ -118,6 +133,7 @@ namespace WebBlog.Web.Controllers
                 Content = post.Content,
                 CreateTime = post.CreateTime
             };
+            ViewData["ImageData"] = post.PostImage;
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(postView);
         }
@@ -126,7 +142,7 @@ namespace WebBlog.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Title,Content,CategoryId,CreateTime,PostImage,Id")] PostViewModel postView)
+        public async Task<IActionResult> Edit(int? id, [Bind("Title,Content,UserId,CategoryId,CreateTime,IsImage,PostImage,Id")] PostViewModel postView)
         {
             var post = new Post
             {
@@ -135,29 +151,38 @@ namespace WebBlog.Web.Controllers
                 UserId = postView.UserId,
                 Content = postView.Content,
                 CategoryId = postView.CategoryId,
-                CreateTime = postView.CreateTime
+                CreateTime = postView.CreateTime,
+                IsImage = postView.IsImage
             };
             if (id != post.Id)
             {
                 return NotFound();
             }
-            post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.LastModifiedTime = DateTime.Now;
 
+            if (!postView.IsImage)
+            {
+                ModelState["PostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
+                var postImage = (await postRepository.FindById(id)).PostImage;
+                post.PostImage = postImage;
+            }
             if (ModelState.IsValid)
             {
                 try
                 {
-
-                    byte[] imageData = null;
-
-                    using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+                    if (postView.IsImage)
                     {
-                        imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
-                    }
+                        byte[] imageData = null;
+                        using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+                        {
+                            imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
+                        }
+                        post.PostImage = imageData;
+                        post.IsImage = true;
 
-                    post.PostImage = imageData;
+                    }
                     await postRepository.Update(post);
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -23,6 +23,7 @@ namespace WebBlog.Web.Models
         public DateTime CreateTime { get; set; }
         public DateTime LastModifiedTime { get; set; }
 
+        public bool IsImage { get; set; }
         [ValidateImage]
         [Display(Name = "PostImage")]
         public IFormFile PostImage { get; set; }

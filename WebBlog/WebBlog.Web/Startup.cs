@@ -40,7 +40,7 @@ namespace WebBlog.Web
             });
             services.AddTransient<BlogDbContext>();
             var connection = Configuration.GetConnectionString("BlogDbContext");
-            services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("WebBlog.Web")));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<BlogDbContext>().AddDefaultUI().AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
