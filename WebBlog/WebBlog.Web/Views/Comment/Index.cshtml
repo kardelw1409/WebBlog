@@ -27,6 +27,9 @@
                 @Html.DisplayNameFor(model => model.Content)
             </th>
             <th>
+                Child comments
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.CreateTime)
             </th>
             <th>
@@ -41,17 +44,12 @@
 
             <tr>
                 <td>
-                    @if (isParent)
-                    {
-                        <a asp-controller="CommentToComments" asp-action="Index" asp-route-id="@item.Id">
-                            @Html.DisplayFor(modelItem => item.Content)
-                        </a>
-                    }
-                    else
-                    {
-                        @Html.DisplayFor(modelItem => item.Content)
-                    }
-
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    <a asp-controller="CommentToComments" asp-action="Index" asp-route-id="@item.Id">
+                        Link
+                    </a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CreateTime)
