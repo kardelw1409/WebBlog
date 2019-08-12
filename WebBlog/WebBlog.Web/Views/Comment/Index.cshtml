@@ -6,29 +6,41 @@
 
 <h2>Index</h2>
 @{
-    bool isParent = true;
+    bool hasParent = false;
     if (Model.Count() != 0)
     {
         if (Model.Cast<WebBlog.ApplicationCore.Entities.Comment>().First().ParentCommentId != null)
         {
-            isParent = false;
+            hasParent = true;
         }
     }
 
 }
+@if (hasParent)
+{
+    <p>
+        <a asp-action="Create" asp-route-postId="@ViewBag.PostId" asp-route-commentId="@ViewBag.ParentCommentId">Create New</a>
+    </p>
+}
+else
+{
+    <p>
+        <a asp-action="Create" asp-route-id="@ViewBag.PostId">Create New</a>
+    </p>
+}
 
-<p>
-    <a asp-action="Create" asp-route-id="@ViewBag.PostId">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Content)
             </th>
-            <th>
-                Child comments
-            </th>
+            @if (!hasParent)
+            {
+                <th>
+                    Child comments
+                </th>
+            }
             <th>
                 @Html.DisplayNameFor(model => model.CreateTime)
             </th>
@@ -46,11 +58,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Content)
                 </td>
-                <td>
-                    <a asp-controller="CommentToComments" asp-action="Index" asp-route-id="@item.Id">
-                        Link
-                    </a>
-                </td>
+
+                @if (!hasParent)
+                {
+                    <td>
+                        <a asp-controller="Comment" asp-action="Index" asp-route-postId="@ViewBag.PostId" asp-route-commentId="@item.Id">
+                            Link
+                        </a>
+                    </td>
+                }
                 <td>
                     @Html.DisplayFor(modelItem => item.CreateTime)
                 </td>
@@ -71,17 +87,10 @@
         }
     </tbody>
 </table>
-@if (isParent)
-{
-    <div>
-        <a asp-controller="Posts" asp-action="Details" asp-route-id="@ViewBag.PostId">Back to Post</a>
-    </div>
-}
-else
-{
-    <div>
-        <a asp-controller="Comment" asp-action="Index" asp-route-id="@ViewBag.PostId">Back to Comment</a>
-    </div>
-}
+
+<div>
+    <a asp-controller="Posts" asp-action="Details" asp-route-id="@ViewBag.PostId">Back to Post</a>
+</div>
+
 
 

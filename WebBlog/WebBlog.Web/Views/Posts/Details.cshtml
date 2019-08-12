@@ -30,8 +30,8 @@
         @if (User.IsInRole("Admin"))
         {
             <a asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Post.Id">Show list comments |</a>
-            <a asp-action="Edit" asp-route-id="@Model.Post.Id">Edit |</a>
         }
+        <a asp-action="Edit" asp-route-id="@Model.Post.Id">Edit |</a>
     }
     <a asp-action="Index">Back to List</a>
 </div>
@@ -101,7 +101,7 @@
                                             <div class="collapsing" id="@comment.Id">
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <form asp-controller="CommentToComments" asp-action="Create">
+                                                        <form asp-controller="Comment" asp-action="Create" asp-route-postId="@comment.PostId" asp-route-commentId="@comment.Id">
                                                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                                             <div class="form-group">
                                                                 <label asp-for="Comment.Content" class="control-label"></label>

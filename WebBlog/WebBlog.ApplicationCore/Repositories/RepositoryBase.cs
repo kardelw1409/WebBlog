@@ -43,7 +43,9 @@ namespace WebBlog.ApplicationCore.Repositories
             {
                 throw new NullReferenceException("id is null.");
             }
-            return await dbContext.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync();
+            var entity = await dbContext.Set<TEntity>().FindAsync(id);
+            //dbContext.Entry(entity).State = EntityState.Detached;
+            return entity;
         }
 
         public async Task<IEnumerable<TEntity>> Get(Func<TEntity, bool> predicate)

@@ -97,6 +97,46 @@ namespace WebBlog.Web.Controllers
             await commentRepository.Remove(id);
             return RedirectToRoute("default", new { controller = "Comment", action = "Index", id = commentOfPost.PostId });
         }
+
+
+
+        [Route("~/Comment/Index/{postId:int}/{commentId:int}")]
+        public async Task<IActionResult> Index(int postId, int commentId)
+        {
+            var commentOfPost = await commentRepository.FindById(commentId);
+            var listComments = commentOfPost.Children;
+            ViewBag.ParentCommentId = commentId;
+            ViewBag.PostId = postId;
+            return View(listComments);
+        }
+
+
+        [Route("~/Comment/Create/{postId:int}/{commentId:int}")]
+        public IActionResult Create(int postId, int commentId)
+        {
+            ViewBag.PostId = postId;
+            ViewBag.ParentCommentId = commentId;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("~/Comment/Create/{postId:int}/{commentId:int}")]
+        public async Task<IActionResult> Create(int postId, int commentId, [Bind("Content,ParentCommentId")] Comment comment)
+        {
+            var parentComment = await commentRepository.FindById(commentId);
+            comment.PostId = postId;
+            comment.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            comment.CreateTime = DateTime.Now;
+            if (ModelState.IsValid)
+            {
+                await commentRepository.Create(comment);
+                return RedirectToRoute("default", new { controller = "Posts", action = "Details", id = comment.PostId });
+            }
+            return View(comment);
+        }
+
+
         private async Task<bool> PostExists(int id)
         {
             return (await commentRepository.GetAll()).Any(e => e.Id == id);
