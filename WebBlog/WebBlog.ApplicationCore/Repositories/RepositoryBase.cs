@@ -43,12 +43,13 @@ namespace WebBlog.ApplicationCore.Repositories
             {
                 throw new NullReferenceException("id is null.");
             }
-            return await dbContext.Set<TEntity>().FindAsync(id);
+            return await dbContext.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<TEntity>> Get(Func<TEntity, bool> predicate)
         {
-            return await new Task<IEnumerable<TEntity>>(() => dbContext.Set<TEntity>().Where(predicate));
+            return await Task.FromResult(dbContext.Set<TEntity>().Where(predicate));
+            //return await new Task<IEnumerable<TEntity>>(() => dbContext.Set<TEntity>().Where(predicate));
         }
 
         public async Task<IEnumerable<TEntity>> GetAll()

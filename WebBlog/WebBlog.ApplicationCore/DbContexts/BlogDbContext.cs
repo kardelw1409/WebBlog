@@ -14,10 +14,6 @@ namespace WebBlog.ApplicationCore.DbContexts
 {
     public class BlogDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
-        [Obsolete]
-        public static readonly LoggerFactory MyLoggerFactory
-            = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
-
         public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options)
         {
 
@@ -30,8 +26,8 @@ namespace WebBlog.ApplicationCore.DbContexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
-                //.UseLoggerFactory(MyLoggerFactory)
-                .UseLazyLoadingProxies();
+                .UseLazyLoadingProxies()
+                .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.DetachedLazyLoadingWarning));
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
