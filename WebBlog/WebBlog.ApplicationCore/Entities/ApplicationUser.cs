@@ -21,7 +21,7 @@ namespace WebBlog.ApplicationCore.Entities
         public DateTime Created { get; set; }
 
         public int? PriorityCategoryId { get; set; }
-        public virtual Category Category { get; set; }
+        public virtual Category PriorityCategory { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
     }

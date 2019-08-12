@@ -9,7 +9,7 @@
     bool hasParent = false;
     if (Model.Count() != 0)
     {
-        if (Model.Cast<WebBlog.ApplicationCore.Entities.Comment>().First().ParentCommentId != null)
+        if (Model.Cast<WebBlog.ApplicationCore.Entities.Comment>().First().ParentId != null)
         {
             hasParent = true;
         }
@@ -19,7 +19,7 @@
 @if (hasParent)
 {
     <p>
-        <a asp-action="Create" asp-route-postId="@ViewBag.PostId" asp-route-commentId="@ViewBag.ParentCommentId">Create New</a>
+        <a asp-action="Create" asp-route-postId="@ViewBag.PostId" asp-route-commentId="@ViewBag.ParentId">Create New</a>
     </p>
 }
 else
@@ -42,7 +42,7 @@ else
                 </th>
             }
             <th>
-                @Html.DisplayNameFor(model => model.CreateTime)
+                @Html.DisplayNameFor(model => model.CreationTime)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.User)
@@ -68,7 +68,7 @@ else
                     </td>
                 }
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreateTime)
+                    @Html.DisplayFor(modelItem => item.CreationTime)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.User.UserName)

@@ -11,7 +11,7 @@ namespace WebBlog.ApplicationCore.Entities
         [Required]
         public string Content { get; set; }
 
-        public DateTime CreateTime { get; set; }
+        public DateTime CreationTime { get; set; }
 
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
@@ -19,8 +19,8 @@ namespace WebBlog.ApplicationCore.Entities
         public int PostId { get; set; }
         public virtual Post Post { get; set; }
 
-        public int? ParentCommentId { get; set; }
-        public virtual Comment ParentComment { get; set; }
+        public int? ParentId { get; set; }
+        public virtual Comment Parent { get; set; }
 
         public virtual ICollection<Comment> Children { get; set; }
 

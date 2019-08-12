@@ -23,7 +23,7 @@ namespace WebBlog.Web.Controllers
             if (postList.Count > 5)
             {
                 postList = (from t in postList
-                            orderby t.CreateTime
+                            orderby t.CreationTime
                             select t).Take(5).ToList();
             }
 

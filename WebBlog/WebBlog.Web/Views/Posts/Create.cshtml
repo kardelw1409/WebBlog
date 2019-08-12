@@ -1,4 +1,4 @@
-﻿@model WebBlog.Web.Models.PostViewModel
+﻿@model WebBlog.ApplicationCore.Entities.Post
 
 @{
     ViewData["Title"] = "Create";
@@ -49,9 +49,9 @@
                 <input asp-for="HasImage" type="checkbox" id="checkInput" name="HasImage" onclick="clickCheck(this)" checked/>
             </div>
             <div class="form-group">
-                <label asp-for="PostImage" class="control-label"></label>
-                <input asp-for="PostImage" id="fileInput" type="file" name="PostImage" class="form-control" />
-                <span asp-validation-for="PostImage" class="text-danger"></span>
+                <label asp-for="FormPostImage" class="control-label"></label>
+                <input asp-for="FormPostImage" id="fileInput" type="file" name="FormPostImage" class="form-control" />
+                <span asp-validation-for="FormPostImage" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

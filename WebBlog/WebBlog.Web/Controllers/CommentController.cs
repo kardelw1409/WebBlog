@@ -30,7 +30,7 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Index(int id)
         {
             var post = await postRepository.FindById(id);
-            var listComments = post.CommentsOfPost.Where(parent => parent.ParentCommentId == null);
+            var listComments = post.Comments.Where(parent => parent.ParentId == null);
             ViewBag.PostId = id;
             return View(listComments);
         }
@@ -50,7 +50,7 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Create([Bind("Content,PostId")] Comment comment)
         {
             comment.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            comment.CreateTime = DateTime.Now;
+            comment.CreationTime = DateTime.Now;
             if (ModelState.IsValid)
             {
                 await commentRepository.Create(comment);
@@ -105,7 +105,7 @@ namespace WebBlog.Web.Controllers
         {
             var commentOfPost = await commentRepository.FindById(commentId);
             var listComments = commentOfPost.Children;
-            ViewBag.ParentCommentId = commentId;
+            ViewBag.ParentId = commentId;
             ViewBag.PostId = postId;
             return View(listComments);
         }
@@ -115,19 +115,19 @@ namespace WebBlog.Web.Controllers
         public IActionResult Create(int postId, int commentId)
         {
             ViewBag.PostId = postId;
-            ViewBag.ParentCommentId = commentId;
+            ViewBag.ParentId = commentId;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("~/Comment/Create/{postId:int}/{commentId:int}")]
-        public async Task<IActionResult> Create(int postId, int commentId, [Bind("Content,ParentCommentId")] Comment comment)
+        public async Task<IActionResult> Create(int postId, int commentId, [Bind("Content,ParentId")] Comment comment)
         {
             var parentComment = await commentRepository.FindById(commentId);
             comment.PostId = postId;
             comment.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            comment.CreateTime = DateTime.Now;
+            comment.CreationTime = DateTime.Now;
             if (ModelState.IsValid)
             {
                 await commentRepository.Create(comment);

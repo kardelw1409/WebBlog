@@ -11,7 +11,7 @@
 @{
     bool hasParent = false;
 }
-@if (ViewBag.ParentCommentId != null)
+@if (ViewBag.ParentId != null)
 {
     hasParent = true;
 
@@ -20,7 +20,7 @@
     <div class="col-md-4">
         @if (hasParent)
         {
-            <form asp-action="Create" asp-route-postId="@ViewBag.PostId" asp-route-commentId="@ViewBag.ParentCommentId">
+            <form asp-action="Create" asp-route-postId="@ViewBag.PostId" asp-route-commentId="@ViewBag.ParentId">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Content" class="control-label"></label>
@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="form-group">
-                    <input asp-for="ParentCommentId" type="hidden" value="@ViewBag.ParentCommentId" class="form-control" />
+                    <input asp-for="ParentId" type="hidden" value="@ViewBag.ParentId" class="form-control" />
                 </div>
 
 

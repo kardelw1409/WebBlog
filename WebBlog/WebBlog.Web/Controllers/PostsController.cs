@@ -42,20 +42,25 @@ namespace WebBlog.Web.Controllers
         }
 
         // GET: Posts/Details/5
+        [Obsolete]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var postAndComments = new PostWithCommentsViewModel();
             var post = await postRepository.FindById(id);
             if (post == null)
             {
                 return NotFound();
             }
-            postAndComments.Post = post;
-            postAndComments.Comments = await commentRepository.Get(p => p.PostId == id);
+
+            var postAndComments = new PostDetailsViewModel()
+            {
+                Post = post
+            };
+
+            postAndComments.Comments = post.Comments.Where(p => p.PostId == id).ToList();
 
             return View(postAndComments);
         }
@@ -72,15 +77,14 @@ namespace WebBlog.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,HasImage,PostImage")] PostViewModel postView)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,HasImage,FormPostImage")] Post post)
         {
-            var post = new Post { Title = postView.Title, Content = postView.Content, CategoryId = postView.CategoryId, HasImage = postView.HasImage };
             post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            post.CreateTime = DateTime.Now;
+            post.CreationTime = DateTime.Now;
             post.LastModifiedTime = DateTime.Now;
-            if (!postView.HasImage)
+            if (!post.HasImage)
             {
-                ModelState["PostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
+                ModelState["FormPostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
                 byte[] imageData = null;
                 FileStream file = new FileStream($"./wwwroot/images/post.png", FileMode.Open);
                 var length = file.Length;
@@ -93,13 +97,13 @@ namespace WebBlog.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (postView.HasImage)
+                if (post.HasImage)
                 {
                     byte[] imageData = null;
 
-                    using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+                    using (var binaryReader = new BinaryReader(post.FormPostImage.OpenReadStream()))
                     {
-                        imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
+                        imageData = binaryReader.ReadBytes((int)post.FormPostImage.Length);
                     }
                     post.PostImage = imageData;
                 }
@@ -108,7 +112,7 @@ namespace WebBlog.Web.Controllers
                 return RedirectToAction("Index");
             }
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
-            return View(postView);
+            return View(post);
         }
 
         [Authorize(Roles = "Admin")]
@@ -124,45 +128,26 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
-            var postView = new PostViewModel
-            {
-                Id = post.Id,
-                Title = post.Title,
-                UserId = post.UserId,
-                CategoryId = post.CategoryId,
-                Content = post.Content,
-                CreateTime = post.CreateTime,
-                ImageData = Convert.ToBase64String(post.PostImage)
-            };
+
             ViewData["ImageData"] = post.PostImage;
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
-            return View(postView);
+            return View(post);
         }
 
         // POST: Posts/Edit/5
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Title,Content,UserId,CategoryId,CreateTime,ImageData,HasImage,PostImage,Id")] PostViewModel postView)
+        public async Task<IActionResult> Edit(int? id, [Bind("Title,Content,UserId,CategoryId,CreationTime,ImageData,HasImage,FormPostImage,Id")] Post post)
         {
-            var post = new Post
-            {
-                Id = postView.Id,
-                Title = postView.Title,
-                UserId = postView.UserId,
-                Content = postView.Content,
-                CategoryId = postView.CategoryId,
-                CreateTime = postView.CreateTime,
-                HasImage = postView.HasImage,
-                PostImage = Convert.FromBase64String(postView.ImageData)
-            };
+
             if (id != post.Id)
             {
                 return NotFound();
             }
             post.LastModifiedTime = DateTime.Now;
 
-            if (!postView.HasImage)
+            if (!post.HasImage)
             {
                 ModelState["PostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
             }
@@ -170,12 +155,12 @@ namespace WebBlog.Web.Controllers
             {
                 try
                 {
-                    if (postView.HasImage)
+                    if (post.HasImage)
                     {
                         byte[] imageData = null;
-                        using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
+                        using (var binaryReader = new BinaryReader(post.FormPostImage.OpenReadStream()))
                         {
-                            imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
+                            imageData = binaryReader.ReadBytes((int)post.FormPostImage.Length);
                         }
                         post.PostImage = imageData;
                         post.HasImage = true;
@@ -199,7 +184,7 @@ namespace WebBlog.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
-            return View(postView);
+            return View(post);
         }
 
         // GET: Posts/Delete/5
