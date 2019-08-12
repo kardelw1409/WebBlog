@@ -27,7 +27,6 @@ namespace WebBlog.ApplicationCore.DbContexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
                 .UseLazyLoadingProxies();
-                //.ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.DetachedLazyLoadingWarning));
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

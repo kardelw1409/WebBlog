@@ -23,10 +23,11 @@ namespace WebBlog.Web.Models
         public DateTime CreateTime { get; set; }
         public DateTime LastModifiedTime { get; set; }
 
-        public bool IsImage { get; set; }
+        public bool HasImage { get; set; }
         [ValidateImage]
         [Display(Name = "PostImage")]
         public IFormFile PostImage { get; set; }
+        public string ImageData { get; set; }
         public int CategoryId { get; set; }
     }
 }

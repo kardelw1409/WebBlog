@@ -43,6 +43,9 @@
                 <input type="hidden" asp-for="UserId" class="form-control" />
             </div>
             <div class="form-group">
+                <input type="hidden" asp-for="ImageData" class="form-control" />
+            </div>
+            <div class="form-group">
                 <label asp-for="CategoryId" class="control-label">Category</label>
                 <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
@@ -53,8 +56,8 @@
                 <span asp-validation-for="CreateTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsImage" class="control-label">Change Image?</label>
-                <input asp-for="IsImage" type="checkbox" id="checkInput" name="IsImage" onclick="clickCheck(this)" checked/>
+                <label asp-for="HasImage" class="control-label">Change Image?</label>
+                <input asp-for="HasImage" type="checkbox" id="checkInput" name="HasImage" onclick="clickCheck(this)" checked />
             </div>
             <div class="form-group">
                 <label asp-for="PostImage" class="control-label"></label>

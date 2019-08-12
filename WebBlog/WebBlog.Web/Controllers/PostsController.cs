@@ -72,13 +72,13 @@ namespace WebBlog.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,IsImage,PostImage")] PostViewModel postView)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,HasImage,PostImage")] PostViewModel postView)
         {
-            var post = new Post { Title = postView.Title, Content = postView.Content, CategoryId = postView.CategoryId, IsImage = postView.IsImage };
+            var post = new Post { Title = postView.Title, Content = postView.Content, CategoryId = postView.CategoryId, HasImage = postView.HasImage };
             post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.CreateTime = DateTime.Now;
             post.LastModifiedTime = DateTime.Now;
-            if (!postView.IsImage)
+            if (!postView.HasImage)
             {
                 ModelState["PostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
                 byte[] imageData = null;
@@ -93,7 +93,7 @@ namespace WebBlog.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (postView.IsImage)
+                if (postView.HasImage)
                 {
                     byte[] imageData = null;
 
@@ -131,7 +131,8 @@ namespace WebBlog.Web.Controllers
                 UserId = post.UserId,
                 CategoryId = post.CategoryId,
                 Content = post.Content,
-                CreateTime = post.CreateTime
+                CreateTime = post.CreateTime,
+                ImageData = Convert.ToBase64String(post.PostImage)
             };
             ViewData["ImageData"] = post.PostImage;
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
@@ -142,7 +143,7 @@ namespace WebBlog.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Title,Content,UserId,CategoryId,CreateTime,IsImage,PostImage,Id")] PostViewModel postView)
+        public async Task<IActionResult> Edit(int? id, [Bind("Title,Content,UserId,CategoryId,CreateTime,ImageData,HasImage,PostImage,Id")] PostViewModel postView)
         {
             var post = new Post
             {
@@ -152,7 +153,8 @@ namespace WebBlog.Web.Controllers
                 Content = postView.Content,
                 CategoryId = postView.CategoryId,
                 CreateTime = postView.CreateTime,
-                IsImage = postView.IsImage
+                HasImage = postView.HasImage,
+                PostImage = Convert.FromBase64String(postView.ImageData)
             };
             if (id != post.Id)
             {
@@ -160,17 +162,15 @@ namespace WebBlog.Web.Controllers
             }
             post.LastModifiedTime = DateTime.Now;
 
-            if (!postView.IsImage)
+            if (!postView.HasImage)
             {
                 ModelState["PostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
-                var postImage = (await postRepository.FindById(id)).PostImage;
-                post.PostImage = postImage;
             }
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (postView.IsImage)
+                    if (postView.HasImage)
                     {
                         byte[] imageData = null;
                         using (var binaryReader = new BinaryReader(postView.PostImage.OpenReadStream()))
@@ -178,7 +178,7 @@ namespace WebBlog.Web.Controllers
                             imageData = binaryReader.ReadBytes((int)postView.PostImage.Length);
                         }
                         post.PostImage = imageData;
-                        post.IsImage = true;
+                        post.HasImage = true;
 
                     }
                     await postRepository.Update(post);

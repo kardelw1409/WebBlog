@@ -44,7 +44,6 @@ namespace WebBlog.ApplicationCore.Repositories
                 throw new NullReferenceException("id is null.");
             }
             var entity = await dbContext.Set<TEntity>().FindAsync(id);
-            //dbContext.Entry(entity).State = EntityState.Detached;
             return entity;
         }
 
