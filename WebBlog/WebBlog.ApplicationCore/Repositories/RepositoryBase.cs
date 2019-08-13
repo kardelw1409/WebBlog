@@ -49,8 +49,8 @@ namespace WebBlog.ApplicationCore.Repositories
 
         public async Task<IEnumerable<TEntity>> Get(Func<TEntity, bool> predicate)
         {
-            return await Task.FromResult(dbContext.Set<TEntity>().Where(predicate));
-            //return await new Task<IEnumerable<TEntity>>(() => dbContext.Set<TEntity>().Where(predicate));
+            //return await Task.FromResult(dbContext.Set<TEntity>().Where(predicate));
+            return await Task.Run(() => dbContext.Set<TEntity>().Where(predicate));;
         }
 
         public async Task<IEnumerable<TEntity>> GetAll()

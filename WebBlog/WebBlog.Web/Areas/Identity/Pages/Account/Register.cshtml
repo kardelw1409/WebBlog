@@ -34,6 +34,14 @@
                     <span asp-validation-for="Input.AccountImage" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label asp-for="Input.HasCategory" class="control-label">Has Category?</label>
+                    <input asp-for="Input.HasCategory" type="checkbox" id="checkInput" name="Input.HasCategory" onclick="clickCheck('categoryInput', this)" checked />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.CategoryId" class="control-label">Category</label>
+                    <select asp-for="Input.CategoryId" id="categoryInput" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                </div>
+                <div class="form-group">
                     <label asp-for="Input.Email"></label>
                     <input asp-for="Input.Email" class="form-control" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>

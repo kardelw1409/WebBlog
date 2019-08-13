@@ -18,7 +18,7 @@ namespace WebBlog.ApplicationCore.Attributes
 
             if (file == null)
             {
-                ErrorMessage = "Please upload your image for post!";
+                ErrorMessage = "Please upload your image!";
                 return false;
             } 
             else if (!allowedFileExtensions.Contains((file != null) ?

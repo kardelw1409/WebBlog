@@ -3,23 +3,6 @@
 @{
     ViewData["Title"] = "Edit";
 }
-<script>
-    function clickCheck(el) {
-        var siblings = document.getElementById("checkInput");
-
-
-        if (siblings != el)
-            siblings.oldChecked = false;
-        if (el.oldChecked)
-            el.checked = false;
-        el.oldChecked = el.checked;
-        siblings.value = el.checked;
-        swapState(!el.checked);
-    }
-    function swapState(isDisabled) {
-        document.getElementById("fileInput").disabled = isDisabled;
-    }
-</script>
 
 <h2>Edit</h2>
 
@@ -57,7 +40,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="HasImage" class="control-label">Change Image?</label>
-                <input asp-for="HasImage" type="checkbox" id="checkInput" name="HasImage" onclick="clickCheck(this)" checked />
+                <input asp-for="HasImage" type="checkbox" id="checkInput" name="HasImage" onclick="clickCheck('fileInput', this)" checked />
             </div>
             <div class="form-group">
                 <label asp-for="FormPostImage" class="control-label"></label>

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
-using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
 namespace WebBlog.ApplicationCore.Entities
 {
@@ -19,9 +17,8 @@ namespace WebBlog.ApplicationCore.Entities
 
         [DataType(DataType.Date)]
         public DateTime Created { get; set; }
-
-        public int? PriorityCategoryId { get; set; }
-        public virtual Category PriorityCategory { get; set; }
+        public int? CategoryId { get; set; }
+        public virtual Category Category { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
     }

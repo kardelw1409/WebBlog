@@ -35,3 +35,27 @@ body {
         display: none;
     }
 }
+
+.container-image {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+/* Bottom left text */
+.bottom-left-image {
+    position: absolute;
+    bottom: 8px;
+    left: auto;
+}
+
+/* Top left text */
+.top-left-image {
+    position: absolute;
+    top: 8px;
+    left: auto;
+}
+.light:hover {
+    background: #ebebf1;
+} 
+

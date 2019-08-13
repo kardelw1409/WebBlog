@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +37,15 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var postList = await postRepository.GetAll();
+            ViewData["Category"] = await categoryRepository.GetAll();
+            return View(postList);
+        }
+
+        [Route("~/Posts/Index/{categoryId:int}")]
+        public async Task<IActionResult> Index(int categoryId)
+        {
+            var postList = await postRepository.Get(post => post.CategoryId == categoryId);
+            ViewData["Category"] = await categoryRepository.GetAll();
             return View(postList);
         }
 
@@ -128,7 +136,7 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
-
+            post.ImageData = Convert.ToBase64String(post.PostImage);
             ViewData["ImageData"] = post.PostImage;
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(post);
@@ -149,7 +157,8 @@ namespace WebBlog.Web.Controllers
 
             if (!post.HasImage)
             {
-                ModelState["PostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
+                ModelState["FormPostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
+                post.PostImage = Convert.FromBase64String(post.ImageData);
             }
             if (ModelState.IsValid)
             {

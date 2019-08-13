@@ -10,8 +10,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using WebBlog.ApplicationCore.Attributes;
 using WebBlog.ApplicationCore.Entities;
+using WebBlog.ApplicationCore.Repositories;
 
 namespace WebBlog.Web.Areas.Identity.Pages.Account
 {
@@ -22,17 +25,21 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IRepository<Category> _categoryRepository;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IRepository<Category> categoryRepository
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _categoryRepository = categoryRepository;
         }
 
         [BindProperty]
@@ -57,10 +64,12 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
             [Display(Name = "Last name")]
             public string LastName { get; set; }
 
-            /*[Required]
-            [DataType(DataType.Upload)]*/
+            [ValidateImage]
             [Display(Name = "Input.AccountImage")]
             public IFormFile AccountImage { get; set; }
+            public bool HasCategory { get; set; }
+            public int CategoryId { get; set; }
+            public virtual Category Category { get; set; }
 
             [Required]
             [EmailAddress]
@@ -79,8 +88,9 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-        public void OnGet(string returnUrl = null)
+        public async Task OnGet(string returnUrl = null)
         {
+            ViewData["CategoryId"] = new SelectList(await _categoryRepository.GetAll(), "Id", "CategoryName");
             ReturnUrl = returnUrl;
         }
 
@@ -90,6 +100,11 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { FirstName = Input.FirstName, LastName = Input.LastName, UserName = Input.UserName, Email = Input.Email };
+
+                if (Input.HasCategory)
+                {
+                    user.CategoryId = Input.CategoryId;
+                }
 
                 byte[] imageData = null;
 
@@ -121,7 +136,7 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
+            ViewData["CategoryId"] = new SelectList(await _categoryRepository.GetAll(), "Id", "CategoryName");
             // If we got this far, something failed, redisplay form
             return Page();
         }
