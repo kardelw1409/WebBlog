@@ -190,7 +190,7 @@ namespace WebBlog.Web.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToRoute("default", new { controller = "Posts", action = "Details", id = post.Id });
             }
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(post);

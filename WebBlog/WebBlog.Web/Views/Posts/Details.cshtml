@@ -6,7 +6,7 @@
 
 <h2>@Html.DisplayFor(model => model.Post.Title)</h2>
 <h5>Author: @Html.DisplayFor(model => model.Post.User.UserName) </h5>
-<h5>Category: @Html.DisplayFor(model => model.Post.Category.CategoryName) </h5>
+<h5>Category: <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@Model.Post.CategoryId">@Model.Post.Category.CategoryName</a></h5>
 <div>
     <hr />
 

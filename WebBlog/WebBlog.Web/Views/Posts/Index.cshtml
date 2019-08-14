@@ -5,7 +5,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Article list</h2>
 
 <p>
     <a class="btn btn-primary" asp-action="Create" role="button">Create Post</a>
@@ -33,15 +33,15 @@
 <div class="row">
     @foreach (var item in Model)
     {
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="light">
 
-                <div class="card" style="width: 18rem; margin-bottom: 18px;">
+                <div class="card" style="width: 23rem; margin-bottom: 18px;">
                     <div class="container-image">
-                        <img class="card-img-top" style='width:286px; height:180px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="Card image cap" />
+                        <img class="card-img-top" style='width:250px; height:170px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="Card image cap" />
 
-                        <div class="top-left-image">Creation Time: @item.CreationTime.ToString()</div>
-                        <div class="bottom-left-image">Last Modified Time: @item.LastModifiedTime.ToString()</div>
+                        <div class="top-left-image"><font class="black-white-text">Creation Time: @item.CreationTime.ToString()</font></div>
+                        <div class="bottom-left-image"><p><font class="black-white-text">Last Modified Time: @item.LastModifiedTime.ToString()</font></p></div>
 
                     </div>
 

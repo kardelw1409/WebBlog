@@ -35,7 +35,24 @@
                     <li><a asp-area="" asp-controller="Posts" asp-action="Index">Posts</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <div>
+                                    <button class="btn" and style="background-color:transparent" type="button" data-toggle="dropdown">
+                                        Control
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a asp-controller="Categories" asp-action="Index">Categories</a></li>
+                                        <li><a href="#">Verification of post</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                    }
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
