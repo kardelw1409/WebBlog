@@ -1,0 +1,62 @@
+﻿@model IEnumerable<WebBlog.ApplicationCore.Entities.Post>
+
+@{
+    ViewData["Title"] = "IndexUserPosts";
+}
+
+<h2>IndexUserPosts</h2>
+
+<p>
+    <a asp-controller="Posts" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.CreationTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastModifiedTime)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.IsConfirmed)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastModifiedTime)
+                </td>
+
+                <td>
+                    @item.IsConfirmed.ToString()
+                </td>
+                <td>
+                    @if (!item.IsConfirmed)
+                    {
+                        <a class="btn btn-primary" asp-controller="Posts" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-controller="Posts" asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a href="~/Identity/Account/Manage">Back to account</a>

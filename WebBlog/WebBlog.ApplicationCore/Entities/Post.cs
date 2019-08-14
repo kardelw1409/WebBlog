@@ -36,6 +36,11 @@ namespace WebBlog.ApplicationCore.Entities
         [NotMapped]
         public string ImageData { get; set; }
 
+        // This property is needed for post verification. 
+        // When you create a post, it will be false. 
+        // Next, the administrator will have to confirm this post for publication to all users.
+        public bool IsConfirmed { get; set; }
+
         public virtual ICollection<Comment> Comments { get; set; }
     }
 }

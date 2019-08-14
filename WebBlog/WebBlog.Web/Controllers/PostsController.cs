@@ -36,7 +36,7 @@ namespace WebBlog.Web.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            var postList = await postRepository.GetAll();
+            var postList = await postRepository.Get(i => i.IsConfirmed == true);
             ViewData["Category"] = await categoryRepository.GetAll();
             return View(postList);
         }
@@ -44,13 +44,12 @@ namespace WebBlog.Web.Controllers
         [Route("~/Posts/Index/{categoryId:int}")]
         public async Task<IActionResult> Index(int categoryId)
         {
-            var postList = await postRepository.Get(post => post.CategoryId == categoryId);
+            var postList = await postRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true));
             ViewData["Category"] = await categoryRepository.GetAll();
             return View(postList);
         }
 
         // GET: Posts/Details/5
-        [Obsolete]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -90,6 +89,7 @@ namespace WebBlog.Web.Controllers
             post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             post.CreationTime = DateTime.Now;
             post.LastModifiedTime = DateTime.Now;
+            post.IsConfirmed = false;
             if (!post.HasImage)
             {
                 ModelState["FormPostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
@@ -123,7 +123,7 @@ namespace WebBlog.Web.Controllers
             return View(post);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -218,7 +218,6 @@ namespace WebBlog.Web.Controllers
         [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await postRepository.Remove(id);
@@ -231,6 +230,17 @@ namespace WebBlog.Web.Controllers
                 }
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [Route("~/Posts/PublishPost/{id:int}")]
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> PublishPost(int? id)
+        {
+            var post = await postRepository.FindById(id);
+            post.IsConfirmed = true;
+            await postRepository.Update(post);
+            return Redirect("~/Admin/IndexUnverifiedPosts");
         }
 
         private async Task<bool> PostExists(int id)

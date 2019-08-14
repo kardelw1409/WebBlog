@@ -1,5 +1,9 @@
-﻿@model IEnumerable<WebBlog.ApplicationCore.Entities.Post>
+﻿@using Microsoft.AspNetCore.Identity
+@using WebBlog.ApplicationCore.Entities
 
+@model IEnumerable<WebBlog.ApplicationCore.Entities.Post>
+
+@inject UserManager<ApplicationUser> UserManager
 @{
 
     ViewData["Title"] = "Index";
@@ -53,11 +57,9 @@
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Read more...</a>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @if (User.IsInRole("Admin"))
+                            @if (UserManager.GetUserAsync(User).Result.Id == item.UserId)
                             {
-
                                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-
                             }
                         }
                     </div>

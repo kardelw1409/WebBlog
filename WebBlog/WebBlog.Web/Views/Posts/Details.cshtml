@@ -1,5 +1,9 @@
-﻿@model WebBlog.Web.Models.PostDetailsViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@using WebBlog.ApplicationCore.Entities
 
+@model WebBlog.Web.Models.PostDetailsViewModel
+
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Details";
 }
@@ -31,11 +35,19 @@
     {
         @if (User.IsInRole("Admin"))
         {
-            <a asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Post.Id">Show list comments |</a>
+            <a class="btn btn-primary" asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Post.Id">Show list comments </a>
+            @if (!Model.Post.IsConfirmed)
+            {
+                <a class="btn btn-primary" asp-controller="Posts" asp-action="PublishPost" asp-route-id="@Model.Post.Id">Publish an article </a>
+            }
+
         }
-        <a asp-action="Edit" asp-route-id="@Model.Post.Id">Edit |</a>
+        @if (UserManager.GetUserAsync(User).Result.Id == Model.Post.UserId)
+        {
+            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Post.Id">Edit </a>
+        }
     }
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary" asp-action="Index">Back to List</a>
 </div>
 
 @if (User.Identity.IsAuthenticated)

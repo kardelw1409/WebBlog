@@ -41,13 +41,13 @@
                         {
                             <li>
                                 <div>
-                                    <button class="btn" and style="background-color:transparent" type="button" data-toggle="dropdown">
-                                        Control
+                                    <a class="btn" data-toggle="dropdown">
+                                        Admin controller
                                         <span class="caret"></span>
-                                    </button>
+                                    </a>
                                     <ul class="dropdown-menu">
                                         <li><a asp-controller="Categories" asp-action="Index">Categories</a></li>
-                                        <li><a href="#">Verification of post</a></li>
+                                        <li><a asp-controller="Admin" asp-action="IndexUnverifiedPosts">Verification of post</a></li>
                                     </ul>
                                 </div>
                             </li>

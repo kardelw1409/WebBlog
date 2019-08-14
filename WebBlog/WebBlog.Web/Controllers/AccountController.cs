@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.ApplicationCore.Entities;
+using WebBlog.ApplicationCore.Repositories;
 using WebBlog.Web.Models;
 
 namespace WebBlog.Web.Controllers
@@ -18,10 +19,20 @@ namespace WebBlog.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        UserManager<ApplicationUser> userManager;
-        public AccountController(UserManager<ApplicationUser> userManager)
+        private UserManager<ApplicationUser> userManager;
+        private IRepository<Post> postRepository;
+
+        public AccountController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository)
         {
             this.userManager = userManager;
+            this.postRepository = postRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> IndexUserPosts(string id)
+        {
+            var postList = await postRepository.Get(i => i.UserId == id);
+            return View(postList);
         }
 
         [HttpGet]

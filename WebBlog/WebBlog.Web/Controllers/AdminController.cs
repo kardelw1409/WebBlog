@@ -2,18 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using WebBlog.ApplicationCore.Entities;
+using WebBlog.ApplicationCore.Repositories;
 
 namespace WebBlog.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        // GET: /<controller>/
-        public IActionResult Index()
+        private IRepository<Post> postRepository;
+        
+        public AdminController(IRepository<Post> postRepository)
         {
-            return View();
+            this.postRepository = postRepository;
         }
+
+        public async Task<IActionResult> IndexUnverifiedPosts()
+        {
+            var postList = await postRepository.Get(i => i.IsConfirmed == false);
+            //ViewData["Category"] = await categoryRepository.GetAll();
+            return View(postList);
+        }
+
+
     }
 }

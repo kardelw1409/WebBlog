@@ -113,8 +113,8 @@ namespace WebBlog.Web
 
                 routes.MapRoute(
                     name: "commentRoute",
-                    template: "{controller}/{action}/{postId}/{id}"
-);
+                    template: "{controller}/{action}/{postId}/{id}");
+
             });
             CreateUserRoles(provider).Wait();
         }
