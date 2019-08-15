@@ -20,13 +20,15 @@ namespace WebBlog.Web.Controllers
 {
     public class PostsController : Controller
     {
+        private UserManager<ApplicationUser> userManager;
         private IRepository<Post> postRepository;
         private IRepository<Category> categoryRepository;
         private IRepository<Comment> commentRepository;
 
-        public PostsController(IRepository<Post> postRepository, IRepository<Category> categoryRepository,
-            IRepository<Comment> commentRepository)
+        public PostsController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository, 
+            IRepository<Category> categoryRepository, IRepository<Comment> commentRepository)
         {
+            this.userManager = userManager;
             this.postRepository = postRepository;
             this.categoryRepository = categoryRepository;
             this.commentRepository = commentRepository;
@@ -61,7 +63,19 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
-
+            var user = userManager.GetUserAsync(User).Result;
+            if (!post.IsConfirmed && user == null)
+            {
+                return Forbid();
+            }
+            if (user != null)
+            {
+                var checkUserRole = await userManager.IsInRoleAsync(user, "Admin");
+                if (!post.IsConfirmed && !checkUserRole && user.Id != post.UserId)
+                {
+                    return Forbid();
+                }
+            }
             var postAndComments = new PostDetailsViewModel()
             {
                 Post = post
@@ -136,6 +150,10 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
+            if (userManager.GetUserAsync(User).Result.Id != post.UserId)
+            {
+                return Forbid();
+            }
             post.ImageData = Convert.ToBase64String(post.PostImage);
             ViewData["ImageData"] = post.PostImage;
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
@@ -153,8 +171,12 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
+            if (userManager.GetUserAsync(User).Result.Id != post.UserId)
+            {
+                return Forbid();
+            }
             post.LastModifiedTime = DateTime.Now;
-
+            post.IsConfirmed = false;
             if (!post.HasImage)
             {
                 ModelState["FormPostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
@@ -209,6 +231,10 @@ namespace WebBlog.Web.Controllers
             if (post == null)
             {
                 return NotFound();
+            }
+            if (userManager.GetUserAsync(User).Result.Id != post.UserId)
+            {
+                return Forbid();
             }
 
             return View(post);

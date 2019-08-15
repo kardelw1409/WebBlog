@@ -10,10 +10,12 @@
 }
 
 <h2>Article list</h2>
-
-<p>
-    <a class="btn btn-primary" asp-action="Create" role="button">Create Post</a>
-</p>
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        <a class="btn btn-primary" asp-action="Create" role="button">Create Post</a>
+    </p>
+}
 <p>
     <div class="btn-group dropdown">
         <button type="button" class="btn btn-outline btn-default dropdown-toggle" id="select" data-toggle="dropdown" aria-expanded="false">

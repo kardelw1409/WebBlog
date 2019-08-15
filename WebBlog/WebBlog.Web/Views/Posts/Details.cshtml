@@ -38,7 +38,7 @@
             <a class="btn btn-primary" asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Post.Id">Show list comments </a>
             @if (!Model.Post.IsConfirmed)
             {
-                <a class="btn btn-primary" asp-controller="Posts" asp-action="PublishPost" asp-route-id="@Model.Post.Id">Publish an article </a>
+                <a class="btn btn-danger" asp-controller="Posts" asp-action="PublishPost" asp-route-id="@Model.Post.Id">Publish an article </a>
             }
 
         }
