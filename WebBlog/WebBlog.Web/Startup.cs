@@ -74,7 +74,10 @@ namespace WebBlog.Web
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+            services.AddMvc()
+                .AddJsonOptions(
+                options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Post>, PostRepository>();
             services.AddScoped<IRepository<Comment>, CommentRepository>();

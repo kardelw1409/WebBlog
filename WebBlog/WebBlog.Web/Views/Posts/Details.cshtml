@@ -87,7 +87,6 @@
                             {
                                 if (comment.ParentId == null)
                                 {
-                                    bool isChildren = false;
                                     var countChildren = comment.Children.Count;
 
                                     <li class="media">
@@ -135,7 +134,6 @@
                                         }
                                         @if (countChildren != 0)
                                         {
-                                            isChildren = true;
                                             <div class="collapsing" id="children_@comment.Id">
                                                 <ul class="media-list">
                                                     @foreach (var childrenComment in comment.Children)

@@ -39,6 +39,7 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var postList = await postRepository.Get(i => i.IsConfirmed == true);
+
             ViewData["Category"] = await categoryRepository.GetAll();
             return View(postList);
         }

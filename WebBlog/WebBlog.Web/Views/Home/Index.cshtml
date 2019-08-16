@@ -2,6 +2,54 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+
+<script>
+    var pageSize = 3;
+    var pageIndex = 0;
+
+    $(document).ready(function () {
+        GetData();
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() ==
+                $(document).height() - $(window).height()) {
+                GetData();
+            }
+        });
+    });
+
+    function GetData() {
+        $.ajax({
+            type: 'GET',
+            url: '/Home/GetData',
+            data: { "pageindex": pageIndex, "pagesize": pageSize },
+            dataType: 'json',
+            success: function (data) {
+                if (data != null) {
+                    for (var i = 0; i < data.length; i++) {
+                        $("#container").append("<hr><div class=\"row\"> <div class=\"col-sm-4\"><a href=\"/Posts/Details/" + data[i].id
+                            + "\"><img src=\"data:image/jpeg;base64," + data[i].postImage + "\" class=\"img-responsive\"></a></div>"
+                            + "<div class=\"col-sm-8\"><h3 class= \"title\"><a href=\"/Posts/Details/" + data[i].id + "\">" + data[i].title + "</a></h3>"
+                            + "<p class=\"text-muted\"><span class=\"glyphicon glyphicon-calendar\"></span>" + data[i].creationTime + "</p>" +
+                            "<p class=\"text-muted\">Presented by <a>" + data[i].user.userName + "</a></p></div></div><hr>"
+                        );
+                        console.log(data[i]);
+                    }
+                    pageIndex++;
+                }
+            },
+            beforeSend: function () {
+                $("#progress").show();
+            },
+            complete: function () {
+                $("#progress").hide();
+            },
+            error: function () {
+                alert("Error while retrieving data!");
+            }
+        });
+    }
+</script>
 <style>
     .img-container {
         object-fit: scale-down;
@@ -9,6 +57,7 @@
         height: 360px;
     }
 </style>
+
 @if (Model.Count() != 0)
 {
     <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
@@ -16,6 +65,10 @@
         <ol class="carousel-indicators">
             @for (var i = 0; i < Model.Count(); i++)
             {
+                if (i == 3)
+                {
+                    break;
+                }
                 <li data-target="#myCarousel" data-slide-to="@i" class="@(i == 0 ? " active":"")"></li>
             }
         </ol>
@@ -26,9 +79,14 @@
             @foreach (var item in Model)
             {
                 counter++;
+                if (counter == 4)
+                {
+                    break;
+                    
+                }
                 <div class="@(counter == 1 ? " item active":"item")">
                     <div>
-                        <img class="img-container" src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="ASP.NET"/>
+                        <img class="img-container" src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="ASP.NET" />
                     </div>
 
                     <div class="carousel-caption" role="option">
@@ -55,4 +113,7 @@
     </div>
 }
 
-
+<div id="container"></div>
+<div id="progress" style="display:none; text-align:center">
+    <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
+</div>
