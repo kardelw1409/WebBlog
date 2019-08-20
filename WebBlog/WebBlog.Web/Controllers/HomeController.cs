@@ -20,24 +20,15 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var postList = (await postRepository.Get(i => i.IsConfirmed == true)).ToList();
-            /*if (postList.Count > 5)
+            var newList = postList.Select(p => new PostViewModel()
             {
-                postList = (from t in postList
-                            orderby t.CreationTime
-                            select t).Take(5).ToList();
-            }*/
-            return View(postList);
-        }
-
-        public async Task<ActionResult> GetData(int pageIndex, int pageSize)
-        {
-
-            var query = (from c in await postRepository.Get(i => i.IsConfirmed == true)
-                         orderby c.Title ascending
-                         select c)
-                         .Skip(pageIndex * pageSize)
-                         .Take(pageSize);
-            return Json(query.ToList());
+                Id = p.Id,
+                Title = p.Title,
+                LastModifiedTime = p.LastModifiedTime,
+                PostImage = p.PostImage,
+                UserName = p.User.UserName
+            });
+            return View(newList);
         }
 
         public IActionResult About()

@@ -11,8 +11,9 @@ namespace WebBlog.ApplicationCore.Entities
 {
     public class Post : Entity
     {
+        [Required]
         public string Title { get; set; }
-
+        [Required]
         public string Content { get; set; }
 
         public DateTime CreationTime { get; set; }

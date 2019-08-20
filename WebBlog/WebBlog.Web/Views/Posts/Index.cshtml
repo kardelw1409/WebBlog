@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using WebBlog.ApplicationCore.Entities
 
-@model IEnumerable<WebBlog.ApplicationCore.Entities.Post>
+@model IEnumerable<WebBlog.Web.Models.PostViewModel>
 
 @inject UserManager<ApplicationUser> UserManager
 @{
@@ -53,8 +53,8 @@
 
 
                     <h5 class="card-title"><strong>Title: </strong>@item.Title</h5>
-                    <p class="card-text"><strong>Category: </strong> <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@item.CategoryId">@item.Category.CategoryName</a></p>
-                    <p class="card-text"><strong>Author: </strong>@item.User.UserName</p>
+                    <p class="card-text"><strong>Category: </strong> <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@item.CategoryId">@item.CategoryName</a></p>
+                    <p class="card-text"><strong>Author: </strong>@item.UserName</p>
                     <div class="card-body">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Read more...</a>
                         @if (User.Identity.IsAuthenticated)
@@ -72,4 +72,16 @@
             </div>
         </div>
     }
+</div>
+<div class="footer">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <ul class="nav navbar-nav">
+                <li><a href="#">Page 1</a></li>
+                <li><a href="#">Page 2</a></li>
+                <li><a href="#">Page 3</a></li>
+            </ul>
+        </div>
+    </nav>
 </div>

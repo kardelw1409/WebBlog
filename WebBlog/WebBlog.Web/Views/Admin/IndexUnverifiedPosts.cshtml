@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebBlog.ApplicationCore.Entities.Post>
+﻿@model IEnumerable<WebBlog.Web.Models.PostViewModel>
 
 @{
     ViewData["Title"] = "IndexUnverifiedPosts";
@@ -21,7 +21,7 @@
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model.UserName)
             </th>
 
             <th></th>
@@ -42,7 +42,7 @@
             </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
+                @Html.DisplayFor(modelItem => item.UserName)
             </td>
 
             <td>

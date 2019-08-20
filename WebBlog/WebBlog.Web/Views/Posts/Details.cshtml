@@ -1,27 +1,27 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using WebBlog.ApplicationCore.Entities
 
-@model WebBlog.Web.Models.PostDetailsViewModel
+@model WebBlog.ApplicationCore.Entities.Comment
 
 @inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2>@Html.DisplayFor(model => model.Post.Title)</h2>
-<h5>Author: @Html.DisplayFor(model => model.Post.User.UserName) </h5>
-<h5>Category: <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@Model.Post.CategoryId">@Model.Post.Category.CategoryName</a></h5>
+<h2>@ViewBag.Post.Title</h2>
+<h5>Author: @ViewBag.Post.User.UserName</h5>
+<h5>Category: <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@ViewBag.Post.CategoryId">@ViewBag.Post.Category.CategoryName</a></h5>
 <div>
     <hr />
 
-    @if (Model.Post.PostImage != null)
+    @if (ViewBag.Post.PostImage != null)
     {
-        <img style='width:900px; height:585px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Post.PostImage))" />
+        <img style='width:900px; height:585px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(ViewBag.Post.PostImage))" />
     }
     <br>
     <br>
     <p class="font-weight-normal">
-        @Html.Raw(Model.Post.Content)
+        @Html.Raw(ViewBag.Post.Content)
     </p>
     <br>
 </div>
@@ -35,16 +35,16 @@
     {
         @if (User.IsInRole("Admin"))
         {
-            <a class="btn btn-primary" asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Post.Id">Show list comments </a>
-            @if (!Model.Post.IsConfirmed)
+            <a class="btn btn-primary" asp-controller="Comment" asp-action="Index" asp-route-id="@ViewBag.Post.Id">Show list comments </a>
+            @if (!ViewBag.Post.IsConfirmed)
             {
-                <a class="btn btn-danger" asp-controller="Posts" asp-action="PublishPost" asp-route-id="@Model.Post.Id">Publish an article </a>
+                <a class="btn btn-danger" asp-controller="Posts" asp-action="PublishPost" asp-route-id="@ViewBag.Post.Id">Publish an article </a>
             }
 
         }
-        @if (UserManager.GetUserAsync(User).Result.Id == Model.Post.UserId)
+        @if (UserManager.GetUserAsync(User).Result.Id == ViewBag.Post.UserId)
         {
-            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Post.Id">Edit </a>
+            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@ViewBag.Post.Id">Edit </a>
         }
     }
     <a class="btn btn-primary" asp-action="Index">Back to List</a>
@@ -57,12 +57,12 @@
             <form asp-controller="Comment" asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group purple-border">
-                    <label asp-for="Comment.Content" class="control-label"></label>
-                    <textarea asp-for="Comment.Content" class="form-control" rows="7"></textarea>
-                    <span asp-validation-for="Comment.Content" class="text-danger"></span>
+                    <label asp-for="Content" class="control-label"></label>
+                    <textarea asp-for="Content" class="form-control" rows="7"></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input asp-for="Comment.PostId" type="hidden" value="@Model.Post.Id" class="form-control" />
+                    <input asp-for="PostId" type="hidden" value="@ViewBag.Post.Id" class="form-control" />
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Submit comment" class="btn btn-default" />
@@ -83,7 +83,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="comments-logout">
                         <ul class="media-list">
-                            @foreach (var comment in Model.Post.Comments)
+                            @foreach (var comment in ViewData["Comments"] as IEnumerable<WebBlog.ApplicationCore.Entities.Comment>)
                             {
                                 if (comment.ParentId == null)
                                 {
@@ -117,12 +117,12 @@
                                                         <form asp-controller="Comment" asp-action="Create" asp-route-postId="@comment.PostId" asp-route-commentId="@comment.Id">
                                                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                                             <div class="form-group">
-                                                                <label asp-for="Comment.Content" class="control-label"></label>
-                                                                <textarea asp-for="Comment.Content" class="form-control" cols="40" rows="5"></textarea>
-                                                                <span asp-validation-for="Comment.Content" class="text-danger"></span>
+                                                                <label asp-for="Content" class="control-label"></label>
+                                                                <textarea asp-for="Content" class="form-control" cols="40" rows="5"></textarea>
+                                                                <span asp-validation-for="Content" class="text-danger"></span>
                                                             </div>
                                                             <div class="form-group">
-                                                                <input asp-for="Comment.ParentId" type="hidden" value="@comment.Id" class="form-control" />
+                                                                <input asp-for="ParentId" type="hidden" value="@comment.Id" class="form-control" />
                                                             </div>
                                                             <div class="form-group">
                                                                 <input type="submit" value="Submit comment" class="btn btn-default" />

@@ -41,7 +41,20 @@ namespace WebBlog.Web.Controllers
             var postList = await postRepository.Get(i => i.IsConfirmed == true);
 
             ViewData["Category"] = await categoryRepository.GetAll();
-            return View(postList);
+            var postViewList = postList.Select(p => new PostViewModel()
+            {
+                Id = p.Id,
+                Title = p.Title,
+                PostImage = p.PostImage,
+                CategoryId = p.CategoryId,
+                UserId = p.UserId,
+                CategoryName = p.Category.CategoryName,
+                CreationTime = p.CreationTime,
+                LastModifiedTime = p.LastModifiedTime,
+                UserName = p.User.UserName
+            });
+
+            return View(postViewList);
         }
 
         [Route("~/Posts/Index/{categoryId:int}")]
@@ -49,7 +62,18 @@ namespace WebBlog.Web.Controllers
         {
             var postList = await postRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true));
             ViewData["Category"] = await categoryRepository.GetAll();
-            return View(postList);
+            var postViewList = postList.Select(p => new PostViewModel()
+            {
+                Id = p.Id,
+                Title = p.Title,
+                PostImage = p.PostImage,
+                CategoryName = p.Category.CategoryName,
+                CreationTime = p.CreationTime,
+                LastModifiedTime = p.LastModifiedTime,
+                UserName = p.User.UserName
+            });
+
+            return View(postViewList);
         }
 
         // GET: Posts/Details/5
@@ -77,14 +101,11 @@ namespace WebBlog.Web.Controllers
                     return Forbid();
                 }
             }
-            var postAndComments = new PostDetailsViewModel()
-            {
-                Post = post
-            };
+            ViewData["Post"] = post; 
 
-            postAndComments.Comments = post.Comments.Where(p => p.PostId == id).ToList();
+            ViewData["Comments"] = post.Comments.Where(p => p.PostId == id).ToList();
 
-            return View(postAndComments);
+            return View();
         }
 
         // GET: Posts/Create
@@ -268,6 +289,31 @@ namespace WebBlog.Web.Controllers
             post.IsConfirmed = true;
             await postRepository.Update(post);
             return Redirect("~/Admin/IndexUnverifiedPosts");
+        }
+
+        public async Task<ActionResult> GetPosts(int pageIndex, int pageSize)
+        {
+            var allConfirmedPosts = await postRepository.Get(i => i.IsConfirmed == true);
+            var length = allConfirmedPosts.Count();
+            if (pageIndex <= (length/pageSize) )
+            {
+                var query = (from c in allConfirmedPosts
+                             orderby c.Title ascending
+                             select c)
+                            .Skip(pageIndex * pageSize)
+                            .Take(pageSize);
+                var postViewQuery = query.Select(p => new PostViewModel()
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    PostImage = p.PostImage,
+                    LastModifiedTime = p.LastModifiedTime,
+                    UserName = p.User.UserName
+
+                });
+                return Json(postViewQuery.ToList());
+            }
+            return StatusCode(204);
         }
 
         private async Task<bool> PostExists(int id)
