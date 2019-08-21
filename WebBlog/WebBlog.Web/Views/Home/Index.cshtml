@@ -4,16 +4,42 @@
 }
 
 <script>
-    /*var pageSize = 3;
+    var pageSize = 3;
     var pageIndex = 0;
+
+    function getScrollbarWidth() {
+        var outer = document.createElement("div");
+        outer.style.visibility = "hidden";
+        outer.style.width = "100px";
+        outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+        document.body.appendChild(outer);
+
+        var widthNoScroll = outer.offsetWidth;
+        // force scrollbars
+        outer.style.overflow = "scroll";
+
+        // add innerdiv
+        var inner = document.createElement("div");
+        inner.style.width = "100%";
+        outer.appendChild(inner);
+
+        var widthWithScroll = inner.offsetWidth;
+
+        // remove divs
+        outer.parentNode.removeChild(outer);
+
+        return widthNoScroll - widthWithScroll;
+    }
 
     $(document).ready(function () {
         getPosts();
 
         $(window).scroll(function () {
-            if ($(window).scrollTop() ==
-                $(document).height() - $(window).height()) {
+            if (($(window).scrollTop() + $(window).innerHeight()) >= ($(document).height() - getScrollbarWidth())) {
                 getPosts();
+
+                $(window).scrollTop($(window).scrollTop() - 10);
             }
         });
     });
@@ -22,7 +48,7 @@
         $(container).append("<hr><div class=\"row\"> <div class=\"col-sm-4\"><a href=\"/Posts/Details/" + data.id
             + "\"><img src=\"data:image/jpeg;base64," + data.postImage + "\" class=\"img-responsive\"></a></div>"
             + "<div class=\"col-sm-8\"><h3 class= \"title\"><a href=\"/Posts/Details/" + data.id + "\">" + data.title + "</a></h3>"
-            + "<p class=\"text-muted\"><span class=\"glyphicon glyphicon-calendar\"></span>" + data.lastModifiedTime + "</p>" +
+            + "<p class=\"text-muted\"><span class=\"glyphicon glyphicon-calendar\"></span>" + new Date(Date.parse(data.lastModifiedTime)).toString('yyyy-MM-dd H:i:s') + "</p>" +
             "<p class=\"text-muted\">Presented by <a>" + data.userName + "</a></p></div></div><hr>"
         );
     }
@@ -37,9 +63,10 @@
                 if (data != null) {
                     for (var i = 0; i < data.length; i++) {
                         buildPost("#container", data[i]);
-
+                        console.log(data[i]);
                     }
                     pageIndex++;
+
                 }
             },
             beforeSend: function () {
@@ -52,7 +79,7 @@
                 alert("Error while retrieving data!");
             }
         });
-    }*/
+    }
 </script>
 <style>
     .img-container {
@@ -117,35 +144,35 @@
     </div>
 }
 
-@foreach (var count in Model)
-{
-    <hr>
-    <div class="row">
-        <div class="col-sm-4">
-            <a href="/Posts/Details/@count.Id"><img src="data:image/jpeg;base64,@(Convert.ToBase64String(count.PostImage))" class="img-responsive"></a>
-        </div>
-        <div class="col-sm-8">
-            <h3 class="title">@count.Title</h3>
-            <p class="text-muted"><span class="glyphicon glyphicon-calendar"></span>@count.LastModifiedTime</p>
-            <p class="text-muted">Presented by @count.UserName</p>
+@*foreach (var count in Model)
+    {
+        <hr>
+        <div class="row">
+            <div class="col-sm-4">
+                <a href="/Posts/Details/@count.Id"><img src="data:image/jpeg;base64,@(Convert.ToBase64String(count.PostImage))" class="img-responsive"></a>
+            </div>
+            <div class="col-sm-8">
+                <h3 class="title">@count.Title</h3>
+                <p class="text-muted"><span class="glyphicon glyphicon-calendar"></span>@count.LastModifiedTime</p>
+                <p class="text-muted">Presented by @count.UserName</p>
 
+            </div>
         </div>
-    </div>
-    <hr>
-}
-<div class="footer">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
+        <hr>
+    }
+    <div class="footer">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
 
-            <ul class="nav navbar-nav">
-                <li><a href="#">Page 1</a></li>
-                <li><a href="#">Page 2</a></li>
-                <li><a href="#">Page 3</a></li>
-            </ul>
-        </div>
-    </nav>
+                    <ul class="nav navbar-nav">
+                        <li><a href="#">Page 1</a></li>
+                        <li><a href="#">Page 2</a></li>
+                        <li><a href="#">Page 3</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>*@
+<div id="container"></div>
+<div id="progress" style="display:none; text-align:center">
+    <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
 </div>
-@*<div id="container"></div>
-    <div id="progress" style="display:none; text-align:center">
-        <i class="fa fa-spinner fa-spin" style="font-size:50px"></i>
-    </div>*@

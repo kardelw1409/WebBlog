@@ -43,6 +43,13 @@
             <div class="light">
 
                 <div class="card" style="width: 23rem; margin-bottom: 18px;">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="cut-text"><b>@item.Title</b></div>
+                        </div>
+                    </div>
+
                     <div class="container-image">
                         <img class="card-img-top" style='width:250px; height:170px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="Card image cap" />
 
@@ -51,8 +58,6 @@
 
                     </div>
 
-
-                    <h5 class="card-title"><strong>Title: </strong>@item.Title</h5>
                     <p class="card-text"><strong>Category: </strong> <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@item.CategoryId">@item.CategoryName</a></p>
                     <p class="card-text"><strong>Author: </strong>@item.UserName</p>
                     <div class="card-body">

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
+using WebBlog.ApplicationCore.Infrastructures;
 using WebBlog.ApplicationCore.Repositories;
 using WebBlog.Web.Models;
 
@@ -25,7 +26,7 @@ namespace WebBlog.Web.Controllers
         private IRepository<Category> categoryRepository;
         private IRepository<Comment> commentRepository;
 
-        public PostsController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository, 
+        public PostsController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository,
             IRepository<Category> categoryRepository, IRepository<Comment> commentRepository)
         {
             this.userManager = userManager;
@@ -38,8 +39,9 @@ namespace WebBlog.Web.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            var postList = await postRepository.Get(i => i.IsConfirmed == true);
-
+            var postList = (await postRepository.Get(i => i.IsConfirmed == true)).ToList();
+            postList.Sort(new PostsComparer());
+            postList.Reverse();
             ViewData["Category"] = await categoryRepository.GetAll();
             var postViewList = postList.Select(p => new PostViewModel()
             {
@@ -60,7 +62,9 @@ namespace WebBlog.Web.Controllers
         [Route("~/Posts/Index/{categoryId:int}")]
         public async Task<IActionResult> Index(int categoryId)
         {
-            var postList = await postRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true));
+            var postList = (await postRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true))).ToList();
+            postList.Sort(new PostsComparer());
+            postList.Reverse();
             ViewData["Category"] = await categoryRepository.GetAll();
             var postViewList = postList.Select(p => new PostViewModel()
             {
@@ -101,7 +105,7 @@ namespace WebBlog.Web.Controllers
                     return Forbid();
                 }
             }
-            ViewData["Post"] = post; 
+            ViewData["Post"] = post;
 
             ViewData["Comments"] = post.Comments.Where(p => p.PostId == id).ToList();
 
@@ -291,29 +295,30 @@ namespace WebBlog.Web.Controllers
             return Redirect("~/Admin/IndexUnverifiedPosts");
         }
 
+        private async Task<List<PostViewModel>> GetPartPosts(int skip, int take)
+        {
+            var allPosts = (await postRepository.Get(i => i.IsConfirmed == true)).ToList();
+            allPosts.Sort(new PostsComparer());
+            allPosts.Reverse();
+            var query = allPosts
+                        .Skip(skip)
+                        .Take(take);
+            var postViewQuery = query.Select(p => new PostViewModel()
+            {
+                Id = p.Id,
+                Title = p.Title,
+                PostImage = p.PostImage,
+                CreationTime = p.CreationTime,
+                LastModifiedTime = p.LastModifiedTime,
+                UserName = p.User.UserName
+
+            });
+            return postViewQuery.ToList();
+        }
+
         public async Task<ActionResult> GetPosts(int pageIndex, int pageSize)
         {
-            var allConfirmedPosts = await postRepository.Get(i => i.IsConfirmed == true);
-            var length = allConfirmedPosts.Count();
-            if (pageIndex <= (length/pageSize) )
-            {
-                var query = (from c in allConfirmedPosts
-                             orderby c.Title ascending
-                             select c)
-                            .Skip(pageIndex * pageSize)
-                            .Take(pageSize);
-                var postViewQuery = query.Select(p => new PostViewModel()
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    PostImage = p.PostImage,
-                    LastModifiedTime = p.LastModifiedTime,
-                    UserName = p.User.UserName
-
-                });
-                return Json(postViewQuery.ToList());
-            }
-            return StatusCode(204);
+            return Json(await GetPartPosts(pageIndex * pageSize + 3, pageSize));
         }
 
         private async Task<bool> PostExists(int id)

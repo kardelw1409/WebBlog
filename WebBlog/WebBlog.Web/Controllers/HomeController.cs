@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebBlog.ApplicationCore.Entities;
+using WebBlog.ApplicationCore.Infrastructures;
 using WebBlog.ApplicationCore.Repositories;
 using WebBlog.Web.Models;
 
@@ -20,6 +21,8 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var postList = (await postRepository.Get(i => i.IsConfirmed == true)).ToList();
+            postList.Sort(new PostsComparer());
+            postList.Reverse();
             var newList = postList.Select(p => new PostViewModel()
             {
                 Id = p.Id,

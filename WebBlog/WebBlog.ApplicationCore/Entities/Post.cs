@@ -43,5 +43,6 @@ namespace WebBlog.ApplicationCore.Entities
         public bool IsConfirmed { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
+
     }
 }

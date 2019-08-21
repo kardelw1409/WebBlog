@@ -11,6 +11,7 @@
 <h2>@ViewBag.Post.Title</h2>
 <h5>Author: @ViewBag.Post.User.UserName</h5>
 <h5>Category: <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@ViewBag.Post.CategoryId">@ViewBag.Post.Category.CategoryName</a></h5>
+<h5><em>Last Modified Time: @ViewBag.Post.LastModifiedTime</em></h5>
 <div>
     <hr />
 
