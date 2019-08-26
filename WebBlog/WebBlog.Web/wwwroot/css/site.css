@@ -71,3 +71,9 @@ body {
     height: 1.6em;
     white-space: nowrap;
 }
+
+.nav.navbar-nav > li.active a {
+    background: none;
+    background-color: #da212f;
+    color: #fff;
+}

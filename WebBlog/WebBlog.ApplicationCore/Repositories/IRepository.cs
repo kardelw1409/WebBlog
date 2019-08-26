@@ -16,6 +16,7 @@ namespace WebBlog.ApplicationCore.Repositories
         Task<TEntity> Remove(int? id);
         Task<IEnumerable<TEntity>> Get(Func<TEntity, bool> predicate);
         Task Update(TEntity entity);
+        Task<int> Count();
 
     }
 }

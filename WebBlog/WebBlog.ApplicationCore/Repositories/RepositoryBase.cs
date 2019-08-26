@@ -63,6 +63,10 @@ namespace WebBlog.ApplicationCore.Repositories
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task<int> Count()
+        {
+            return await dbContext.Set<TEntity>().CountAsync();
+        }
         public void Dispose()
         {
             dbContext.Dispose();

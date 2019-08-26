@@ -26,7 +26,7 @@
             <li class="search-box"><input type="text" class="form-control" placeholder="Type text..." value="" name="search" /></li>
             @foreach (var item in ViewData["Category"] as IEnumerable<WebBlog.ApplicationCore.Entities.Category>)
             {
-                <li class="result"><a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@item.Id">@item.CategoryName</a></li>
+                <li class="result"><a asp-controller="Posts" asp-action="IndexPartPosts" asp-route-categoryId="@item.Id" asp-route-numberPage="1">@item.CategoryName</a></li>
             }
 
         </ul>
@@ -80,14 +80,45 @@
         </div>
     }
 </div>
+
 <div class="footer">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
 
             <ul class="nav navbar-nav">
-                <li><a href="#">Page 1</a></li>
-                <li><a href="#">Page 2</a></li>
-                <li><a href="#">Page 3</a></li>
+                @if (ViewBag.SelectedCategory != null)
+                {
+                    @for (var i = 1; i <= ViewBag.PageCount; i++)
+                    {
+                        if (ViewBag.SelectedPage == i)
+                        {
+                            <li class="active"><a>Page @i<span class="sr-only">(current)</span></a></li>
+                        }
+                        else
+                        {
+                            <li><a asp-action="IndexPartPosts" asp-route-numberPage="@i"></a></li>
+                        }
+
+
+                    }
+                }
+                else
+                {
+                    @for (var i = 1; i <= ViewBag.PageCount; i++)
+                    {
+                        if (ViewBag.SelectedPage == i)
+                        {
+                            <li class="active"><a>Page @i<span class="sr-only">(current)</span></a></li>
+
+                        }
+                        else
+                        {
+                            <li><a asp-action="IndexPartPosts" asp-route-numberPage="@i">Page @i</a></li>
+                        }
+
+                    }
+                }
+
             </ul>
         </div>
     </nav>
