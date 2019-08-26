@@ -12,7 +12,8 @@
 
     <div class="col-md-4">
         <form asp-action="Create" asp-controller="Posts" method="post" enctype="multipart/form-data">
-            <em><font color="red">Attention! After creating, your article will not be available to the public. It will appear only after validation by the administrator.</font></em>
+            <em><font color="red">Attention! After creating, your article will not be available to the public. 
+                It will appear only after validation by the administrator.</font></em>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>

@@ -25,7 +25,7 @@ namespace WebBlog.Web.Controllers
             this.commentRepository = commentRepository;
         }
 
-        // GET: CommentOfPosts
+        // GET: Comment
         [Route("~/Comment/Index/{id:int}")]
         public async Task<IActionResult> Index(int id)
         {
@@ -35,7 +35,7 @@ namespace WebBlog.Web.Controllers
             return View(listComments);
         }
 
-        // GET: CommentOfPosts/Create/PostId
+        // GET: Comment/Create/PostId
         [Route("~/Comment/Create/{id:int}")]
         public IActionResult Create(int id)
         {
@@ -43,7 +43,7 @@ namespace WebBlog.Web.Controllers
             return View();
         }
 
-        // POST: CommentOfPosts/Create
+        // POST: Comment/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("~/Comment/Create/{id:int}")]
@@ -61,7 +61,7 @@ namespace WebBlog.Web.Controllers
 
 
 
-        // GET: CommentOfPosts/Delete/5
+        // GET: Comment/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -78,7 +78,7 @@ namespace WebBlog.Web.Controllers
             return View(commentOfPost);
         }
 
-        // POST: CommentOfPosts/Delete/5
+        // POST: Comment/Delete/5
         [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

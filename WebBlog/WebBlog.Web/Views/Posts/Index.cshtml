@@ -40,40 +40,42 @@
     @foreach (var item in Model)
     {
         <div class="col-md-3">
-            <div class="light">
+            <div class="well">
+                <div class="light">
 
-                <div class="card" style="width: 23rem; margin-bottom: 18px;">
+                    <div class="card" style="width: 23rem; margin-bottom: 18px;">
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="cut-text"><b>@item.Title</b></div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="cut-text"><b>@item.Title</b></div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="container-image">
-                        <img class="card-img-top" style='width:250px; height:170px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="Card image cap" />
+                        <div class="container-image">
+                            <img class="card-img-top" style='width:225px; height:155px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="Card image cap" />
 
-                        <div class="top-left-image"><font class="black-white-text">Creation Time: @item.CreationTime.ToString()</font></div>
-                        <div class="bottom-left-image"><p><font class="black-white-text">Last Modified Time: @item.LastModifiedTime.ToString()</font></p></div>
+                            <div class="top-left-image"><font class="black-white-text">Creation Time: @item.CreationTime.ToString()</font></div>
+                            <div class="bottom-left-image"><p><font class="black-white-text">Last Modified Time: @item.LastModifiedTime.ToString()</font></p></div>
 
-                    </div>
+                        </div>
 
-                    <p class="card-text"><strong>Category: </strong> <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@item.CategoryId">@item.CategoryName</a></p>
-                    <p class="card-text"><strong>Author: </strong>@item.UserName</p>
-                    <div class="card-body">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Read more...</a>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            @if (UserManager.GetUserAsync(User).Result.Id == item.UserId)
+                        <p class="card-text"><strong>Category: </strong> <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@item.CategoryId">@item.CategoryName</a></p>
+                        <p class="card-text"><strong>Author: </strong>@item.UserName</p>
+                        <div class="card-body">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Read more...</a>
+                            @if (User.Identity.IsAuthenticated)
                             {
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                @if (UserManager.GetUserAsync(User).Result.Id == item.UserId)
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                }
                             }
-                        }
-                    </div>
+                        </div>
 
+
+                    </div>
 
                 </div>
-
             </div>
         </div>
     }

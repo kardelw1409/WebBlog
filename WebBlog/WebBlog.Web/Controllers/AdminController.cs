@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebBlog.ApplicationCore.Entities;
+using WebBlog.ApplicationCore.Infrastructures;
 using WebBlog.ApplicationCore.Repositories;
 using WebBlog.Web.Models;
 
@@ -22,8 +23,10 @@ namespace WebBlog.Web.Controllers
 
         public async Task<IActionResult> IndexUnverifiedPosts()
         {
-            var postList = await postRepository.Get(i => i.IsConfirmed == false);
-            //ViewData["Category"] = await categoryRepository.GetAll();
+            var postList = (await postRepository.Get(i => i.IsConfirmed == false)).ToList();
+            postList.Sort(new PostsComparer());
+            postList.Reverse();
+
             var postViewList = postList.Select(p => new PostViewModel()
             {
                 Id = p.Id,
@@ -36,9 +39,9 @@ namespace WebBlog.Web.Controllers
                 LastModifiedTime = p.LastModifiedTime,
                 UserName = p.User.UserName
             });
+
             return View(postViewList);
         }
-
 
     }
 }
