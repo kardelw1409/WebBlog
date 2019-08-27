@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
-using WebBlog.ApplicationCore.Entities.AbstractEntities;
 using WebBlog.ApplicationCore.Infrastructures;
 using WebBlog.ApplicationCore.Repositories;
 using WebBlog.Web.Models;
@@ -34,14 +30,13 @@ namespace WebBlog.Web.Controllers
             this.postRepository = postRepository;
             this.categoryRepository = categoryRepository;
             this.commentRepository = commentRepository;
-
         }
 
         // GET: Posts
         public async Task<IActionResult> Index()
         {
             ViewBag.SelectedPage = 1;
-            var postsCount = await postRepository.Count();
+            var postsCount = (await postRepository.Get(post => post.IsConfirmed == true)).Count();
             var pageCount = (int)Math.Ceiling(postsCount / 20.0);
             ViewBag.PageCount = pageCount;
             var postViewList = await GetPartPosts(i => i.IsConfirmed == true, 0, 20);
@@ -50,20 +45,33 @@ namespace WebBlog.Web.Controllers
             return View(postViewList);
         }
 
+        [Route("~/Posts/Index/{categoryId:int}")]
+        public async Task<IActionResult> Index(int categoryId)
+        {
+            ViewBag.SelectedPage = 1;
+            ViewBag.SelectedCategory = categoryId;
+            var postsCount = (await postRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true))).Count();
+            var pageCount = (int)Math.Ceiling(postsCount / 20.0);
+            var postViewList = await GetPartPosts(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true), 0, 20);
+            ViewData["Category"] = await categoryRepository.GetAll();
+
+            return View(postViewList);
+        }
+
         public async Task<IActionResult> IndexPartPosts(int numberPage)
         {
             ViewBag.SelectedPage = numberPage;
-            var postsCount = await postRepository.Count();
+            var postsCount = (await postRepository.Get(post => post.IsConfirmed == true)).Count();
             var pageCount = (int)Math.Ceiling(postsCount / 20.0);
             if (pageCount < numberPage || numberPage < 1 )
             {
                 return NotFound();
             }
             ViewBag.PageCount = pageCount;
-
             var postViewList = await GetPartPosts(i => i.IsConfirmed == true, 
                 (numberPage - 1) * 20, numberPage != pageCount ? 20 : postsCount - 20 * (numberPage-1));
             ViewData["Category"] = await categoryRepository.GetAll();
+
             return View("Index", postViewList);
         }
 
@@ -83,19 +91,8 @@ namespace WebBlog.Web.Controllers
             var postViewList = await GetPartPosts(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true),
                 (numberPage - 1) * 20, numberPage != pageCount ? 20 : postsCount - 20 * (numberPage - 1));
             ViewData["Category"] = await categoryRepository.GetAll();
-            return View("Index", postViewList);
-        }
 
-        [Route("~/Posts/Index/{categoryId:int}")]
-        public async Task<IActionResult> Index(int categoryId)
-        {
-            ViewBag.SelectedPage = 1;
-            ViewBag.SelectedCategory = categoryId;
-            var postsCount = (await postRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true))).Count();
-            var pageCount = (int)Math.Ceiling(postsCount / 20.0);
-            var postViewList = await GetPartPosts(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true), 0, 20);
-            ViewData["Category"] = await categoryRepository.GetAll();
-            return View(postViewList);
+            return View("Index", postViewList);
         }
 
         // GET: Posts/Details/5
@@ -111,7 +108,6 @@ namespace WebBlog.Web.Controllers
                 return NotFound();
             }
             var user = userManager.GetUserAsync(User).Result;
-
             //Can be done using AuthorizationHandler.
             if (!post.IsConfirmed && user == null)
             {
@@ -126,7 +122,6 @@ namespace WebBlog.Web.Controllers
                 }
             }
             ViewData["Post"] = post;
-
             ViewData["Comments"] = post.Comments.Where(p => p.PostId == id).ToList();
 
             return View();
@@ -141,28 +136,30 @@ namespace WebBlog.Web.Controllers
             return View();
         }
 
+        private byte[] LoadDefaultImage()
+        {
+            byte[] imageData = null;
+            var file = new FileStream($"./wwwroot/images/post.png", FileMode.Open);
+            var length = file.Length;
+
+            using (var binaryReader = new BinaryReader(file))
+            {
+                imageData = binaryReader.ReadBytes((int)length);
+            }
+            return imageData;
+        }
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,HasImage,FormPostImage")] Post post)
         {
-            post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            post.CreationTime = DateTime.Now;
-            post.LastModifiedTime = DateTime.Now;
-            post.IsConfirmed = false;
             if (!post.HasImage)
             {
                 ModelState["FormPostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
-                byte[] imageData = null;
-                FileStream file = new FileStream($"./wwwroot/images/post.png", FileMode.Open);
-                var length = file.Length;
-                using (var binaryReader = new BinaryReader(file))
-                {
-                    imageData = binaryReader.ReadBytes((int)length);
-                }
-
-                post.PostImage = imageData;
+                post.PostImage = LoadDefaultImage();
             }
+
             if (ModelState.IsValid)
             {
                 if (post.HasImage)
@@ -176,10 +173,17 @@ namespace WebBlog.Web.Controllers
                     post.PostImage = imageData;
                 }
 
+                post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                post.CreationTime = DateTime.Now;
+                post.LastModifiedTime = DateTime.Now;
+                post.IsConfirmed = false;
+
                 await postRepository.Create(post);
+
                 return RedirectToAction("Index");
             }
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
+
             return View(post);
         }
 
@@ -223,8 +227,7 @@ namespace WebBlog.Web.Controllers
             {
                 return Forbid();
             }
-            post.LastModifiedTime = DateTime.Now;
-            post.IsConfirmed = false;
+
             if (!post.HasImage)
             {
                 ModelState["FormPostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
@@ -243,8 +246,10 @@ namespace WebBlog.Web.Controllers
                         }
                         post.PostImage = imageData;
                         post.HasImage = true;
-
                     }
+                    post.LastModifiedTime = DateTime.Now;
+                    post.IsConfirmed = false;
+
                     await postRepository.Update(post);
 
                 }
@@ -263,6 +268,7 @@ namespace WebBlog.Web.Controllers
                 return RedirectToRoute("default", new { controller = "Posts", action = "Details", id = post.Id });
             }
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
+
             return View(post);
         }
 
@@ -304,6 +310,7 @@ namespace WebBlog.Web.Controllers
                     await commentRepository.Remove(count.Id);
                 }
             }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -315,6 +322,7 @@ namespace WebBlog.Web.Controllers
             var post = await postRepository.FindById(id);
             post.IsConfirmed = true;
             await postRepository.Update(post);
+
             return Redirect("~/Admin/IndexUnverifiedPosts");
         }
 

@@ -31,7 +31,7 @@
 
         </ul>
     </div>
-    <a href="~/Posts/Index">Show all</a>
+    <a class="btn btn-primary" href="~/Posts/Index">Show all</a>
 </p>
 
 
@@ -59,7 +59,7 @@
 
                         </div>
 
-                        <p class="card-text"><strong>Category: </strong> <a asp-controller="Posts" asp-action="Index" asp-route-categoryId="@item.CategoryId">@item.CategoryName</a></p>
+                        <p class="card-text"><strong>Category: </strong> <a asp-controller="Posts" asp-action="IndexPartPosts" asp-route-categoryId="@item.CategoryId" asp-route-numberPage="1">@item.CategoryName</a></p>
                         <p class="card-text"><strong>Author: </strong>@item.UserName</p>
                         <div class="card-body">
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Read more...</a>
@@ -67,7 +67,7 @@
                             {
                                 @if (UserManager.GetUserAsync(User).Result.Id == item.UserId)
                                 {
-                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                                 }
                             }
                         </div>
@@ -92,11 +92,11 @@
                     {
                         if (ViewBag.SelectedPage == i)
                         {
-                            <li class="active"><a>Page @i<span class="sr-only">(current)</span></a></li>
+                            <li class="gray-background"><a>Page @i<span class="sr-only"></span></a></li>
                         }
                         else
                         {
-                            <li><a asp-action="IndexPartPosts" asp-route-numberPage="@i"></a></li>
+                            <li class="active"><a asp-action="IndexPartPosts" asp-route-numberPage="@i">Page @i</a></li>
                         }
 
 
@@ -108,12 +108,12 @@
                     {
                         if (ViewBag.SelectedPage == i)
                         {
-                            <li class="active"><a>Page @i<span class="sr-only">(current)</span></a></li>
+                            <li class="gray-background"><a>Page @i<span class="sr-only"></span></a></li>
 
                         }
                         else
                         {
-                            <li><a asp-action="IndexPartPosts" asp-route-numberPage="@i">Page @i</a></li>
+                            <li class="active"><a asp-action="IndexPartPosts" asp-route-numberPage="@i">Page @i</a></li>
                         }
 
                     }

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using WebBlog.ApplicationCore.Entities;
-using WebBlog.ApplicationCore.Entities.AbstractEntities;
 
 namespace WebBlog.ApplicationCore.DbContexts
 {

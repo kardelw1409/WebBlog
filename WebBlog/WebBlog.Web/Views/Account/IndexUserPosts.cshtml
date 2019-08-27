@@ -7,7 +7,7 @@
 <h2>IndexUserPosts</h2>
 
 <p>
-    <a asp-controller="Posts" asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-controller="Posts" asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -52,11 +52,11 @@
                     {
                         <a class="btn btn-primary" asp-controller="Posts" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     }
-                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-controller="Posts" asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                    <a class="btn btn-primary" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                    <a class="btn btn-danger" asp-controller="Posts" asp-action="Delete" asp-route-id="@item.Id">Delete</a> 
                 </td>
             </tr>
         }
     </tbody>
 </table>
-<a href="~/Identity/Account/Manage">Back to account</a>
+<a class="btn btn-primary" href="~/Identity/Account/Manage">Back to account</a>

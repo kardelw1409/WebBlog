@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -42,28 +36,32 @@ namespace WebBlog.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeAvatar(ImageViewModel image)
+        public async Task<IActionResult> ChangeAvatar([Bind("AvatarImage")]ImageViewModel image)
         {
-            byte[] imageData = null;
-
-            using (var binaryReader = new BinaryReader(image.AvatarImage.OpenReadStream()))
-            {
-                imageData = binaryReader.ReadBytes((int)image.AvatarImage.Length);
-            }
-            var user = userManager.GetUserAsync(User).Result;
-            user.AccountImage = imageData;
             if (ModelState.IsValid)
             {
                 try
                 {
+                    byte[] imageData = null;
+
+                    using (var binaryReader = new BinaryReader(image.AvatarImage.OpenReadStream()))
+                    {
+                        imageData = binaryReader.ReadBytes((int)image.AvatarImage.Length);
+                    }
+                    var user = userManager.GetUserAsync(User).Result;
+                    user.AccountImage = imageData;
+
                     await userManager.UpdateAsync(user);
+
+                    return Redirect("~/Identity/Account/Manage");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     throw;
                 }
             }
-            return Redirect("~/Identity/Account/Manage");
+
+            return View();
         }
     }
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace WebBlog.Web.Models
 {
     public class ErrorViewModel

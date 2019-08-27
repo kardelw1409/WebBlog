@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
-using WebBlog.ApplicationCore.Entities.AbstractEntities;
 using WebBlog.ApplicationCore.Repositories;
 
 namespace WebBlog.Web
@@ -120,28 +115,11 @@ namespace WebBlog.Web
 
             });
             CreateUserRoles(provider).Wait();
+            CreateUsers(provider).Wait();
         }
 
-        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        private ApplicationUser CreateAdminProfile()
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-            IdentityResult roleResult;
-            //Adding Addmin Role    
-            var roleCheck = await roleManager.RoleExistsAsync("Admin");
-            if (!roleCheck)
-            {
-                //create the roles and seed them to the database    
-                roleResult = await roleManager.CreateAsync(new IdentityRole("Admin"));
-            }
-
-            roleCheck = await roleManager.RoleExistsAsync("User");
-            if (!roleCheck)
-            {
-                //create the roles and seed them to the database    
-                roleResult = await roleManager.CreateAsync(new IdentityRole("User"));
-            }
             var adminUser = new ApplicationUser
             {
                 UserName = Configuration.GetSection("AdminSettings")["UserName"],
@@ -149,8 +127,6 @@ namespace WebBlog.Web
                 LastName = Configuration.GetSection("AdminSettings")["LastName"],
                 Email = Configuration.GetSection("AdminSettings")["UserEmail"]
             };
-            var userPassword = Configuration.GetSection("AdminSettings")["UserPassword"];
-            var user = await userManager.FindByEmailAsync(Configuration.GetSection("AdminSettings")["UserEmail"]);
 
             byte[] imageData = null;
             //TO DO
@@ -162,6 +138,16 @@ namespace WebBlog.Web
             }
 
             adminUser.AccountImage = imageData;
+            return adminUser;
+        }
+
+        private async Task CreateUsers(IServiceProvider serviceProvider)
+        {
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var user = await userManager.FindByEmailAsync(Configuration.GetSection("AdminSettings")["UserEmail"]);
+            var userPassword = Configuration.GetSection("AdminSettings")["UserPassword"];
+            var adminUser = CreateAdminProfile();
             if (user == null)
             {
                 var createPowerUser = await userManager.CreateAsync(adminUser, userPassword);
@@ -169,6 +155,26 @@ namespace WebBlog.Web
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
+            }
+        }
+
+        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            //Adding Addmin Role    
+            var roleCheck = await roleManager.RoleExistsAsync("Admin");
+            if (!roleCheck)
+            {
+                //create the roles and seed them to the database    
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+            roleCheck = await roleManager.RoleExistsAsync("User");
+            if (!roleCheck)
+            {
+                //create the roles and seed them to the database    
+                await roleManager.CreateAsync(new IdentityRole("User"));
             }
 
         }
