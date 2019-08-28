@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using WebBlog.ApplicationCore.Entities
+
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -61,19 +65,20 @@
                     {
                         @if (User.IsInRole("Admin"))
                         {
-                            <li>
-                                <div>
-                                    <a class="btn" data-toggle="dropdown">
-                                        Admin controller
-                                        <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a asp-controller="Categories" asp-action="Index">Categories</a></li>
-                                        <li><a asp-controller="Admin" asp-action="IndexUnverifiedPosts">Verification of post</a></li>
-                                    </ul>
-                                </div>
+                            <li class="dropdown">
+
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                                    Admin Controller
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a asp-controller="Categories" asp-action="Index">Categories</a></li>
+                                    <li><a asp-controller="Admin" asp-action="IndexUnverifiedPosts">Verification of post</a></li>
+                                </ul>
+
                             </li>
                         }
+                        <li><a asp-area="" asp-controller="Account" asp-action="IndexUserPosts" asp-route-id="@UserManager.GetUserAsync(User).Result.Id">My Posts</a></li>
                     }
                 </ul>
                 <partial name="_LoginPartial" />

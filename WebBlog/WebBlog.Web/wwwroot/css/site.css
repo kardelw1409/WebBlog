@@ -80,3 +80,7 @@ body {
 .gray-background {
     background-color: #c7c5bc;
 }
+
+.admin-controller {
+    background-color: white;
+}

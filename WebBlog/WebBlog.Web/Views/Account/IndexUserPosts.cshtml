@@ -4,7 +4,7 @@
     ViewData["Title"] = "IndexUserPosts";
 }
 
-<h2>IndexUserPosts</h2>
+<h2>User Posts List</h2>
 
 <p>
     <a class="btn btn-primary" asp-controller="Posts" asp-action="Create">Create New</a>
@@ -13,18 +13,18 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                Title
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.CreationTime)
+                Creation Time
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastModifiedTime)
+                Last Modified Time
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.IsConfirmed)
+                Is Confirmed?
             </th>
             <th></th>
         </tr>
