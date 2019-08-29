@@ -10,7 +10,7 @@
 }
 
 <h2>Article list</h2>
-@if (User.Identity.IsAuthenticated)
+@if (User.IsInRole("Admin") || User.IsInRole("User"))
 {
     <p>
         <a class="btn btn-primary" asp-action="Create" role="button">Create Post</a>
@@ -63,7 +63,7 @@
                         <p class="card-text"><strong>Author: </strong>@item.UserName</p>
                         <div class="card-body">
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Read more...</a>
-                            @if (User.Identity.IsAuthenticated)
+                            @if (User.IsInRole("Admin") || User.IsInRole("User"))
                             {
                                 @if (UserManager.GetUserAsync(User).Result.Id == item.UserId)
                                 {

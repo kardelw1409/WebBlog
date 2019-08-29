@@ -16,11 +16,13 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -76,7 +78,17 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    var user = await _userManager.FindByNameAsync(Input.UserName);
+                    var roles = await _userManager.GetRolesAsync(user);
+                    if (roles.Where(p => p == "User" || p == "Admin").Count() == 0)
+                    {
+                        return RedirectToAction("RolesMissing", "Home");
+                    }
+                    else
+                    {
+                        return LocalRedirect(returnUrl);
+                    }
+
                 }
                 if (result.RequiresTwoFactor)
                 {

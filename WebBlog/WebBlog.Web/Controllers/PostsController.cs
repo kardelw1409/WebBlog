@@ -128,7 +128,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // GET: Posts/Create
-        [Authorize]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create()
         {
             ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName");
@@ -149,7 +149,7 @@ namespace WebBlog.Web.Controllers
             return imageData;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin,User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,HasImage,FormPostImage")] Post post)
@@ -187,7 +187,7 @@ namespace WebBlog.Web.Controllers
             return View(post);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -212,7 +212,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // POST: Posts/Edit/5
-        [Authorize]
+        [Authorize(Roles = "Admin,User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, [Bind("Title,Content,UserId,CategoryId,CreationTime,ImageData,HasImage,FormPostImage,Id")] Post post)
@@ -273,7 +273,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // GET: Posts/Delete/5
-        [Authorize]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -296,7 +296,7 @@ namespace WebBlog.Web.Controllers
         }
 
         // POST: Posts/Delete/5
-        [Authorize]
+        [Authorize(Roles = "Admin,User")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

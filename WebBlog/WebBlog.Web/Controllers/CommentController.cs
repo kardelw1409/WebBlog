@@ -10,7 +10,7 @@ using WebBlog.ApplicationCore.Repositories;
 
 namespace WebBlog.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,User")]
     public class CommentController : Controller
     {
         private IRepository<Post> postRepository;

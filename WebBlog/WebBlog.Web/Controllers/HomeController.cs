@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebBlog.ApplicationCore.Entities;
 using WebBlog.ApplicationCore.Infrastructures;
@@ -11,9 +13,11 @@ namespace WebBlog.Web.Controllers
 {
     public class HomeController : Controller
     {
+        UserManager<ApplicationUser> userManager;
         IRepository<Post> postRepository;
-        public HomeController(IRepository<Post> postRepository)
+        public HomeController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository)
         {
+            this.userManager = userManager;
             this.postRepository = postRepository;
         }
         public async Task<IActionResult> Index()
@@ -55,6 +59,18 @@ namespace WebBlog.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> RolesMissing()
+        {
+            var user = (await userManager.GetUserAsync(User));
+            var roles = await userManager.GetRolesAsync(user);
+            if (roles.Where(p => p == "User" || p == "Admin").Count() != 0)
+            {
+                return Forbid();
+            }
+            return View();
         }
     }
 }

@@ -10,7 +10,7 @@ using WebBlog.Web.Models;
 
 namespace WebBlog.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,User")]
     public class AccountController : Controller
     {
         private UserManager<ApplicationUser> userManager;
