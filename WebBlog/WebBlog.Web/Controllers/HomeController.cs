@@ -24,7 +24,7 @@ namespace WebBlog.Web.Controllers
         {
             var postList = (await postRepository.Get(i => i.IsConfirmed == true)).ToList();
             postList.Sort(new PostsComparer());
-            postList.Reverse();
+
             var newList = postList.Select(p => new PostViewModel()
             {
                 Id = p.Id,
@@ -38,7 +38,7 @@ namespace WebBlog.Web.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Web Blog description page.";
 
             return View();
         }

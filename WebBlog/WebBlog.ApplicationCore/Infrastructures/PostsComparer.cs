@@ -7,7 +7,7 @@ namespace WebBlog.ApplicationCore.Infrastructures
     {
         public int Compare(Post x, Post y)
         {
-            return x.LastModifiedTime.CompareTo(y.LastModifiedTime);
+            return y.LastModifiedTime.CompareTo(x.LastModifiedTime);
         }
     }
 }

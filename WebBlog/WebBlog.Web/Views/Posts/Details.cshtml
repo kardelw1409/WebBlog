@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using WebBlog.ApplicationCore.Entities
+@using WebBlog.ApplicationCore.Infrastructures;
 
 @model WebBlog.ApplicationCore.Entities.Comment
 
@@ -135,7 +136,11 @@
                                         {
                                             <div class="collapsing" id="children_@comment.Id">
                                                 <ul class="media-list">
-                                                    @foreach (var childrenComment in comment.Children)
+                                                    @{
+                                                        var sortChildren = comment.Children.ToList();
+                                                        sortChildren.Sort(new CommentsComparer());
+                                                    }
+                                                    @foreach (var childrenComment in sortChildren)
                                                     {
                                                         <li class="media media-replied" id="replied">
                                                             <a class="pull-left">

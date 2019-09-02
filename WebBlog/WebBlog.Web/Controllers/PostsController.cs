@@ -121,8 +121,11 @@ namespace WebBlog.Web.Controllers
                     return Forbid();
                 }
             }
+            var comments = post.Comments.Where(p => p.PostId == id).ToList();
+            comments.Sort(new CommentsComparer());
+
+            ViewData["Comments"] = comments;
             ViewData["Post"] = post;
-            ViewData["Comments"] = post.Comments.Where(p => p.PostId == id).ToList();
 
             return View();
         }
@@ -330,7 +333,7 @@ namespace WebBlog.Web.Controllers
         {
             var allPosts = (await postRepository.Get(predicate)).ToList();
             allPosts.Sort(new PostsComparer());
-            allPosts.Reverse();
+
             var query = allPosts
                         .Skip(skip)
                         .Take(take);

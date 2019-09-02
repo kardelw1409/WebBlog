@@ -32,7 +32,6 @@ namespace WebBlog.Web.Controllers
         {
             var postList = (await postRepository.Get(i => i.IsConfirmed == false)).ToList();
             postList.Sort(new PostsComparer());
-            postList.Reverse();
 
             var postViewList = postList.Select(p => new PostViewModel()
             {
