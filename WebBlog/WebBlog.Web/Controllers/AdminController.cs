@@ -40,11 +40,11 @@ namespace WebBlog.Web.Controllers
                 PostImage = p.PostImage,
                 CategoryId = p.CategoryId,
                 UserId = p.UserId,
-                CategoryName = p.Category.CategoryName,
+                CategoryName = p.Category?.CategoryName,
                 CreationTime = p.CreationTime,
                 LastModifiedTime = p.LastModifiedTime,
                 UserName = p.User.UserName
-            });
+            }).ToList();
 
             return View(postViewList);
         }

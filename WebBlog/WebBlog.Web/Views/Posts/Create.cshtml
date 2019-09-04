@@ -28,7 +28,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="CategoryId" class="control-label">Category</label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId">
+                    <option>No category</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="HasImage" class="control-label">Upload Image?</label>

@@ -10,7 +10,7 @@ namespace WebBlog.Web.Models
         public string Title { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime LastModifiedTime { get; set; }
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
         public string CategoryName { get; set; }
         public byte[] PostImage { get; set; }
         public string UserId { get; set; }

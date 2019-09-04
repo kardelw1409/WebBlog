@@ -157,6 +157,7 @@ namespace WebBlog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,HasImage,FormPostImage")] Post post)
         {
+            ModelState["CategoryId"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
             if (!post.HasImage)
             {
                 ModelState["FormPostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
@@ -230,7 +231,7 @@ namespace WebBlog.Web.Controllers
             {
                 return Forbid();
             }
-
+            ModelState["CategoryId"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
             if (!post.HasImage)
             {
                 ModelState["FormPostImage"].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
@@ -344,7 +345,7 @@ namespace WebBlog.Web.Controllers
                 UserId = p.UserId,
                 UserName = p.User.UserName,
                 Title = p.Title,
-                CategoryName = p.Category.CategoryName,
+                CategoryName = p.Category?.CategoryName,
                 PostImage = p.PostImage,
                 CreationTime = p.CreationTime,
                 LastModifiedTime = p.LastModifiedTime
