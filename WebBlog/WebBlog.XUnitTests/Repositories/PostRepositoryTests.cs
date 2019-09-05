@@ -46,7 +46,7 @@ namespace WebBlog.XUnitTests
                 CategoryId = 1,
                 Content = "Content First",
                 CreationTime = DateTime.Now,
-                PostImage = LoadDefaultImage(),
+                PostImage = new byte[0],
                 HasImage = false,
                 LastModifiedTime = DateTime.Now,
                 IsConfirmed = true,
@@ -58,7 +58,7 @@ namespace WebBlog.XUnitTests
                 CategoryId = 1,
                 Content = "Content Second",
                 CreationTime = DateTime.Now,
-                PostImage = LoadDefaultImage(),
+                PostImage = new byte[0],
                 HasImage = false,
                 LastModifiedTime = DateTime.Now,
                 IsConfirmed = true,
@@ -67,17 +67,5 @@ namespace WebBlog.XUnitTests
             return testPosts;
         }
 
-        private byte[] LoadDefaultImage()
-        {
-            byte[] imageData = null;
-            var file = new FileStream($"C:/Users/Valery_Kardel/source/repos/WebBlog/WebBlog/WebBlog.Web/wwwroot/images/post.png", FileMode.Open);
-            var length = file.Length;
-
-            using (var binaryReader = new BinaryReader(file))
-            {
-                imageData = binaryReader.ReadBytes((int)length);
-            }
-            return imageData;
-        }
     }
 }
