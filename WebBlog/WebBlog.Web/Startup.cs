@@ -4,11 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
 using WebBlog.ApplicationCore.Repositories;
@@ -77,6 +80,7 @@ namespace WebBlog.Web
             services.AddScoped<IRepository<Post>, PostRepository>();
             services.AddScoped<IRepository<Comment>, CommentRepository>();
 
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,6 +105,11 @@ namespace WebBlog.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                    ForwardedHeaders.XForwardedProto
+            });
             app.UseAuthentication();
 
             app.UseMvc(routes =>
@@ -114,6 +123,7 @@ namespace WebBlog.Web
                     template: "{controller}/{action}/{postId}/{id}");
 
             });
+
             CreateUserRoles(provider).Wait();
             CreateUsers(provider).Wait();
         }

@@ -1,16 +1,10 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using WebBlog.ApplicationCore.DbContexts;
 using WebBlog.ApplicationCore.Entities;
 using WebBlog.ApplicationCore.Repositories;
-using WebBlog.Web.Controllers;
-using WebBlog.Web.Models;
 using Xunit;
 
 namespace WebBlog.XUnitTests

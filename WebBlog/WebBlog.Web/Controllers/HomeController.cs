@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebBlog.ApplicationCore.Entities;
@@ -15,10 +18,12 @@ namespace WebBlog.Web.Controllers
     {
         UserManager<ApplicationUser> userManager;
         IRepository<Post> postRepository;
+        ISomeServiceRepository<Weather> serviceRepository;
         public HomeController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository)
         {
             this.userManager = userManager;
             this.postRepository = postRepository;
+            serviceRepository = new WeatherRepository();
         }
         public async Task<IActionResult> Index()
         {
@@ -33,6 +38,10 @@ namespace WebBlog.Web.Controllers
                 PostImage = p.PostImage,
                 UserName = p.User.UserName
             });
+            // This method don'n return real ip.
+            // To Do
+            var ip = HttpContext.Connection.RemoteIpAddress.ToString();
+            ViewBag.Weather = await serviceRepository.GetData(ip);
             return View(newList);
         }
 

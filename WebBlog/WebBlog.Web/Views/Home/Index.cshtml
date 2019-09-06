@@ -76,7 +76,7 @@
                 {
                     break;
                 }
-                <li data-target="#myCarousel" data-slide-to="@i" class="@(i == 0 ? " active":"")"></li>
+                <li data-target="#myCarousel" data-slide-to="@i" class="@(i == 0 ? " active" : "")"></li>
             }
         </ol>
         <div class="carousel-inner" role="listbox">
@@ -91,7 +91,7 @@
                     break;
 
                 }
-                <div class="@(counter == 1 ? " item active":"item")">
+                <div class="@(counter == 1 ? " item active" : "item")">
                     <div>
                         <img class="img-container" src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="ASP.NET" />
                     </div>
@@ -119,6 +119,13 @@
         </a>
     </div>
 }
+
+<p>@ViewBag.Weather.SityName</p>
+@*<p>@ViewBag.Weather.KelvinTemperature K</p>*@
+@{ViewBag.Weather.KelvinTemperature = (ViewBag.Weather.KelvinTemperature - 273.15);}
+<p>@ViewBag.Weather.KelvinTemperature °С</p>
+<p>@ViewBag.Weather.Description</p>
+
 
 <div id="container"></div>
 <div id="progress" style="display:none; text-align:center">
