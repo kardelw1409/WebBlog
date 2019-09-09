@@ -23,8 +23,8 @@ namespace WebBlog.ApplicationCore.Entities
 
         public static async Task<IpLocation> QueryGeographicalLocationAsync(string ipAddress)
         {
-            HttpClient client = new HttpClient();
-            string result = await client.GetStringAsync("http://freegeoip.net/json/" + ipAddress);
+            HttpClient client = new HttpClient(); 
+            string result = await client.GetStringAsync("http://api.ipstack.com/" + ipAddress + "?access_key=f4c0f6818e80d66d63093866ea6ff810&output=json&legacy=1");
 
             return JsonConvert.DeserializeObject<IpLocation>(result);
         }

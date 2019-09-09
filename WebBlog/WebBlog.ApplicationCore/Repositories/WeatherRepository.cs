@@ -20,7 +20,7 @@ namespace WebBlog.ApplicationCore.Repositories
         public async Task<Weather> GetData(string ip)
         {
             // Didn't returned location
-            var requestString = "https://openweathermap.org/data/2.5/find?q=Vitebsk,BY" +//+ GetLocation(ip) +
+            var requestString = "https://openweathermap.org/data/2.5/find?q=" + /*Vitebsk,BY"*/(await GetLocation(ip)) +
                 "&type=like&sort=population&cnt=30&appid=b6907d289e10d714a6e88b30761fae22";
             var result = await httpClient.GetStringAsync(requestString);
             var objects = JsonConvert.DeserializeObject<RootObject>(result);

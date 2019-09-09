@@ -76,6 +76,7 @@ namespace WebBlog.Web
                 .AddJsonOptions(
                 options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
             services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Post>, PostRepository>();
             services.AddScoped<IRepository<Comment>, CommentRepository>();

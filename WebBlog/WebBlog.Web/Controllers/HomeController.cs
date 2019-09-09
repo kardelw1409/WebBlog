@@ -19,7 +19,7 @@ namespace WebBlog.Web.Controllers
         UserManager<ApplicationUser> userManager;
         IRepository<Post> postRepository;
         ISomeServiceRepository<Weather> serviceRepository;
-        public HomeController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository)
+        public HomeController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository, IHttpContextAccessor httpContextAccessor)
         {
             this.userManager = userManager;
             this.postRepository = postRepository;
@@ -40,7 +40,7 @@ namespace WebBlog.Web.Controllers
             });
             // This method don'n return real ip.
             // To Do
-            var ip = HttpContext.Connection.RemoteIpAddress.ToString();
+            var ip = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             ViewBag.Weather = await serviceRepository.GetData(ip);
             return View(newList);
         }
