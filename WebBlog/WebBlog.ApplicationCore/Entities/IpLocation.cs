@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WebBlog.ApplicationCore.Entities
@@ -26,8 +24,12 @@ namespace WebBlog.ApplicationCore.Entities
             HttpClient client = new HttpClient();
             
             string result = await client.GetStringAsync("http://api.ipstack.com/" + ipAddress + "?access_key=f4c0f6818e80d66d63093866ea6ff810&output=json&legacy=1");
-
-            return JsonConvert.DeserializeObject<IpLocation>(result);
+            var weather = JsonConvert.DeserializeObject<IpLocation>(result);
+            if (weather.City == null)
+            {
+                throw new InvalidOperationException("City not found.");
+            }
+            return weather;
         }
 
     }

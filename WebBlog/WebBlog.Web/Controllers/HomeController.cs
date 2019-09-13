@@ -1,11 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebBlog.ApplicationCore.Entities;
@@ -42,9 +39,17 @@ namespace WebBlog.Web.Controllers
             // This method don'n return real ip.
             // To Do
             var ip = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-
-            ViewBag.Weather = await serviceRepository.GetData(ip);
-
+            try
+            {
+                ViewBag.Weather = await serviceRepository.GetData(ip);
+            }
+            catch
+            {
+                ViewBag.Weather = new Weather()
+                {
+                    CityName = "City not found"
+                };
+            }
             return View(newList);
         }
 

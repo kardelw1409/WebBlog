@@ -6,7 +6,7 @@ namespace WebBlog.ApplicationCore.Entities
     public class Weather : Entity
     {
         [JsonProperty("name")]
-        public string SityName { get; set; }
+        public string CityName { get; set; }
 
         public string Country { get; set;}
 

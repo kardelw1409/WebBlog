@@ -39,7 +39,6 @@
                 if (data != null) {
                     for (var i = 0; i < data.length; i++) {
                         buildPost("#container", data[i]);
-                        console.log(data[i]);
                     }
                     pageIndex++;
 
@@ -67,23 +66,23 @@
 
 @if (Model.Count() != 0)
 {
-    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
 
-        <ol class="carousel-indicators">
-            @for (var i = 0; i < Model.Count(); i++)
+    <ol class="carousel-indicators">
+        @for (var i = 0; i < Model.Count(); i++)
             {
                 if (i == 3)
                 {
                     break;
                 }
-                <li data-target="#myCarousel" data-slide-to="@i" class="@(i == 0 ? " active" : "")"></li>
+        <li data-target="#myCarousel" data-slide-to="@i" class="@(i == 0 ? " active" : "")"></li>
             }
-        </ol>
-        <div class="carousel-inner" role="listbox">
-            @{
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        @{
                 int counter = 0;
-            }
-            @foreach (var item in Model)
+        }
+        @foreach (var item in Model)
             {
                 counter++;
                 if (counter == 4)
@@ -91,41 +90,49 @@
                     break;
 
                 }
-                <div class="@(counter == 1 ? " item active" : "item")">
-                    <div>
-                        <img class="img-container" src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="ASP.NET" />
-                    </div>
+        <div class="@(counter == 1 ? " item active" : "item")">
+            <div>
+                <img class="img-container" src="data:image/jpeg;base64,@(Convert.ToBase64String(item.PostImage))" alt="ASP.NET" />
+            </div>
 
-                    <div class="carousel-caption" role="option">
-                        <p>
-                            @item.Title
+            <div class="carousel-caption" role="option">
+                <p>
+                    @item.Title
 
-                            <a class="btn btn-default" href="/Posts/Details/@item.Id">
-                                Read More
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            }
+                    <a class="btn btn-default" href="/Posts/Details/@item.Id">
+                        Read More
+                    </a>
+                </p>
+            </div>
         </div>
-
-        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
+            }
     </div>
+
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
 }
 
-<p>@ViewBag.Weather.SityName</p>
-@*<p>@ViewBag.Weather.KelvinTemperature K</p>*@
-@{ViewBag.Weather.KelvinTemperature = (ViewBag.Weather.KelvinTemperature - 273.15);}
-<p>@ViewBag.Weather.KelvinTemperature °С</p>
-<p>@ViewBag.Weather.Description</p>
+@if (ViewBag.Weather.KelvinTemperature != 0) {
 
+ViewBag.Weather.KelvinTemperature = (ViewBag.Weather.KelvinTemperature - 273.15);
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h2 style="color:darkgreen; font-weight:bold;">@ViewBag.Weather.CityName</h2>
+        @*<p>@ViewBag.Weather.KelvinTemperature K</p>*@
+        <h3 style="color:darkolivegreen; font-weight:bold;">@ViewBag.Weather.KelvinTemperature °С</h3>
+
+        <h3>@ViewBag.Weather.Description</h3>
+    </div>
+</div>
+}
 
 <div id="container"></div>
 <div id="progress" style="display:none; text-align:center">

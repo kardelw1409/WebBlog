@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,36 +12,21 @@ namespace WebBlog.ApplicationCore.Repositories
         public WeatherRepository()
         {
             httpClient = new HttpClient();
-
         }
 
         public async Task<Weather> GetData(string ip)
         {
             // Didn't returned location
-            var weather = new Weather();
-            try
+            var requestString = "https://openweathermap.org/data/2.5/find?q=" + /*"Vitebsk,BY"*/(await GetLocation(ip)) +
+                "&type=like&sort=population&cnt=30&appid=b6907d289e10d714a6e88b30761fae22";
+            var result = await httpClient.GetStringAsync(requestString);
+            var objects = JsonConvert.DeserializeObject<RootObject>(result);
+            var weather = new Weather()
             {
-                var requestString = "https://openweathermap.org/data/2.5/find?q=" + /*Vitebsk,BY"*/(await GetLocation(ip)) +
-                    "&type=like&sort=population&cnt=30&appid=b6907d289e10d714a6e88b30761fae22";
-                var result = await httpClient.GetStringAsync(requestString);
-                var objects = JsonConvert.DeserializeObject<RootObject>(result);
-                weather = new Weather()
-                {
-                    SityName = objects?.Weathers[0]?.SityName,
-                    KelvinTemperature = objects.Weathers[0].Temperature.TempTemperature,
-                    Description = objects.Weathers[0].States[0].Description
-                };
-            }
-            catch
-            {
-                weather = new Weather()
-                {
-                    SityName = "No Sity",
-                    KelvinTemperature = 273.15
-                };
-            }
-
-
+                CityName = objects?.Weathers[0]?.CityName,
+                KelvinTemperature = objects.Weathers[0].Temperature.TempTemperature,
+                Description = objects.Weathers[0].States[0].Description
+            };
             return weather;
         }
 
@@ -55,7 +38,7 @@ namespace WebBlog.ApplicationCore.Repositories
         private class JsonWeather
         {
             [JsonProperty("name")]
-            public string SityName { get; set; }
+            public string CityName { get; set; }
             [JsonProperty("main")]
             public Temperature Temperature { get; set; }
             [JsonProperty("weather")]
