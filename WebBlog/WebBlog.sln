@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebBlog.Web", "WebBlog.Web\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7C523614-359A-496E-8DE7-65F9208D32AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBlog.XUnitTests", "WebBlog.XUnitTests\WebBlog.XUnitTests.csproj", "{695481A6-823A-455E-80D9-BB98B777401F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebBlog.XUnitTests", "WebBlog.XUnitTests\WebBlog.XUnitTests.csproj", "{695481A6-823A-455E-80D9-BB98B777401F}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AE1D8088-C396-442F-9F36-406FC58D011B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{695481A6-823A-455E-80D9-BB98B777401F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{695481A6-823A-455E-80D9-BB98B777401F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{695481A6-823A-455E-80D9-BB98B777401F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE1D8088-C396-442F-9F36-406FC58D011B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE1D8088-C396-442F-9F36-406FC58D011B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE1D8088-C396-442F-9F36-406FC58D011B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE1D8088-C396-442F-9F36-406FC58D011B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

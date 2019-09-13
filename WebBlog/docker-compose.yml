@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  webblog.web:
+    image: ${DOCKER_REGISTRY-}webblogweb
+    build:
+      context: .
+      dockerfile: WebBlog.Web\Dockerfile
+    depends_on:
+        - db
+  db:
+    image: "microsoft/mssql-server-windows-express"
+    environment:
+        SA_PASSWORD: "123qwe_QWE"
+        ACCEPT_EULA: "Y"

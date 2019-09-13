@@ -38,7 +38,7 @@ namespace WebBlog.Web
             });
             services.AddTransient<BlogDbContext>();
             var connection = Configuration.GetConnectionString("BlogDbContext");
-            services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("WebBlog.Web.Migrations")));
+            services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(connection, b => b.MigrationsAssembly("WebBlog.Web")));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<BlogDbContext>().AddDefaultUI().AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
@@ -102,7 +102,6 @@ namespace WebBlog.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

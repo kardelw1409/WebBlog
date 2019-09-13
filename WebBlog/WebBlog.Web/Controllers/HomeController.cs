@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -41,7 +42,9 @@ namespace WebBlog.Web.Controllers
             // This method don'n return real ip.
             // To Do
             var ip = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+
             ViewBag.Weather = await serviceRepository.GetData(ip);
+
             return View(newList);
         }
 
