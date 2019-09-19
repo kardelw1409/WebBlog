@@ -9,6 +9,11 @@
     ViewData["Title"] = "Details";
 }
 
+    <style>
+        p {
+            font-size: 18px;
+        }
+    </style>
 <h2>@ViewBag.Post.Title</h2>
 <h5>Author: @ViewBag.Post.User.UserName</h5>
 @if (ViewBag.Post.CategoryId != null)
@@ -30,7 +35,7 @@ else
     }
     <br>
     <br>
-    <p class="font-weight-normal">
+    <p class="text-justify">
         @Html.Raw(ViewBag.Post.Content)
     </p>
     <br>

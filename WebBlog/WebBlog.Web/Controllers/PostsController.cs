@@ -18,29 +18,24 @@ namespace WebBlog.Web.Controllers
 {
     public class PostsController : Controller
     {
-        private UserManager<ApplicationUser> userManager;
-        private IRepository<Post> postRepository;
-        private IRepository<Category> categoryRepository;
-        private IRepository<Comment> commentRepository;
+        UserManager<ApplicationUser> userManager;
+        IUnitOfWork unitOfWork;
 
-        public PostsController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository,
-            IRepository<Category> categoryRepository, IRepository<Comment> commentRepository)
+        public PostsController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
         {
             this.userManager = userManager;
-            this.postRepository = postRepository;
-            this.categoryRepository = categoryRepository;
-            this.commentRepository = commentRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         // GET: Posts
         public async Task<IActionResult> Index()
         {
             ViewBag.SelectedPage = 1;
-            var postsCount = (await postRepository.Get(post => post.IsConfirmed == true)).Count();
-            var pageCount = (int)Math.Ceiling(postsCount / 20.0);
-            ViewBag.PageCount = pageCount;
+            var postsCount = (await unitOfWork.PostRepository.Get(post => post.IsConfirmed == true)).Count();
+            var lastPageNumber = (int)Math.Ceiling(postsCount / 20.0);
+            ViewBag.PageCount = lastPageNumber;
             var postViewList = await GetPartPosts(i => i.IsConfirmed == true, 0, 20);
-            ViewData["Category"] = await categoryRepository.GetAll();
+            ViewData["Category"] = await unitOfWork.CategoryRepository.GetAll();
 
             return View(postViewList);
         }
@@ -50,10 +45,10 @@ namespace WebBlog.Web.Controllers
         {
             ViewBag.SelectedPage = 1;
             ViewBag.SelectedCategory = categoryId;
-            var postsCount = (await postRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true))).Count();
-            var pageCount = (int)Math.Ceiling(postsCount / 20.0);
+            var postsCount = (await unitOfWork.PostRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true))).Count();
+            var lastPageNumber = (int)Math.Ceiling(postsCount / 20.0);
             var postViewList = await GetPartPosts(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true), 0, 20);
-            ViewData["Category"] = await categoryRepository.GetAll();
+            ViewData["Category"] = await unitOfWork.CategoryRepository.GetAll();
 
             return View(postViewList);
         }
@@ -61,16 +56,16 @@ namespace WebBlog.Web.Controllers
         public async Task<IActionResult> IndexPartPosts(int numberPage)
         {
             ViewBag.SelectedPage = numberPage;
-            var postsCount = (await postRepository.Get(post => post.IsConfirmed == true)).Count();
-            var pageCount = (int)Math.Ceiling(postsCount / 20.0);
-            if (pageCount < numberPage || numberPage < 1 )
+            var postsCount = (await unitOfWork.PostRepository.Get(post => post.IsConfirmed == true)).Count();
+            var lastPageNumber = (int)Math.Ceiling(postsCount / 20.0);
+            if (lastPageNumber < numberPage || numberPage < 1 )
             {
                 return NotFound();
             }
-            ViewBag.PageCount = pageCount;
+            ViewBag.PageCount = lastPageNumber;
             var postViewList = await GetPartPosts(i => i.IsConfirmed == true, 
-                (numberPage - 1) * 20, numberPage != pageCount ? 20 : postsCount - 20 * (numberPage-1));
-            ViewData["Category"] = await categoryRepository.GetAll();
+                (numberPage - 1) * 20, numberPage != lastPageNumber ? 20 : postsCount - 20 * (numberPage - 1));
+            ViewData["Category"] = await unitOfWork.CategoryRepository.GetAll();
 
             return View("Index", postViewList);
         }
@@ -80,17 +75,17 @@ namespace WebBlog.Web.Controllers
         {
             ViewBag.SelectedPage = numberPage;
             ViewBag.SelectedCategory = categoryId;
-            var postsCount = (await postRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true))).Count();
-            var pageCount = (int)Math.Ceiling(postsCount / 20.0);
-            if (pageCount < numberPage || numberPage < 1)
+            var postsCount = (await unitOfWork.PostRepository.Get(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true))).Count();
+            var lastPageNumber = (int)Math.Ceiling(postsCount / 20.0);
+            if (lastPageNumber < numberPage || numberPage < 1)
             {
                 return NotFound();
             }
-            ViewBag.PageCount = pageCount;
+            ViewBag.PageCount = lastPageNumber;
 
             var postViewList = await GetPartPosts(post => (post.CategoryId == categoryId) && (post.IsConfirmed == true),
-                (numberPage - 1) * 20, numberPage != pageCount ? 20 : postsCount - 20 * (numberPage - 1));
-            ViewData["Category"] = await categoryRepository.GetAll();
+                (numberPage - 1) * 20, numberPage != lastPageNumber ? 20 : postsCount - 20 * (numberPage - 1));
+            ViewData["Category"] = await unitOfWork.CategoryRepository.GetAll();
 
             return View("Index", postViewList);
         }
@@ -102,7 +97,7 @@ namespace WebBlog.Web.Controllers
             {
                 return NotFound();
             }
-            var post = await postRepository.FindById(id);
+            var post = await unitOfWork.PostRepository.FindById(id);
             if (post == null)
             {
                 return NotFound();
@@ -134,7 +129,7 @@ namespace WebBlog.Web.Controllers
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName");
+            ViewData["CategoryId"] = new SelectList(await unitOfWork.CategoryRepository.GetAll(), "Id", "CategoryName");
 
             return View();
         }
@@ -182,11 +177,11 @@ namespace WebBlog.Web.Controllers
                 post.LastModifiedTime = DateTime.Now;
                 post.IsConfirmed = false;
 
-                await postRepository.Create(post);
+                await unitOfWork.PostRepository.Create(post);
 
                 return RedirectToAction("Index");
             }
-            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
+            ViewData["CategoryId"] = new SelectList(await unitOfWork.CategoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
 
             return View(post);
         }
@@ -199,7 +194,7 @@ namespace WebBlog.Web.Controllers
                 return NotFound();
             }
 
-            var post = await postRepository.FindById(id);
+            var post = await unitOfWork.PostRepository.FindById(id);
             if (post == null)
             {
                 return NotFound();
@@ -211,7 +206,7 @@ namespace WebBlog.Web.Controllers
             }
             post.ImageData = Convert.ToBase64String(post.PostImage);
             ViewData["ImageData"] = post.PostImage;
-            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
+            ViewData["CategoryId"] = new SelectList(await unitOfWork.CategoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
             return View(post);
         }
 
@@ -254,7 +249,7 @@ namespace WebBlog.Web.Controllers
                     post.LastModifiedTime = DateTime.Now;
                     post.IsConfirmed = false;
 
-                    await postRepository.Update(post);
+                    await unitOfWork.PostRepository.Update(post);
 
                 }
                 catch (DbUpdateConcurrencyException)
@@ -271,7 +266,7 @@ namespace WebBlog.Web.Controllers
                 }
                 return RedirectToRoute("default", new { controller = "Posts", action = "Details", id = post.Id });
             }
-            ViewData["CategoryId"] = new SelectList(await categoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
+            ViewData["CategoryId"] = new SelectList(await unitOfWork.CategoryRepository.GetAll(), "Id", "CategoryName", post.CategoryId);
 
             return View(post);
         }
@@ -285,7 +280,7 @@ namespace WebBlog.Web.Controllers
                 return NotFound();
             }
 
-            var post = await postRepository.FindById(id);
+            var post = await unitOfWork.PostRepository.FindById(id);
             if (post == null)
             {
                 return NotFound();
@@ -305,13 +300,13 @@ namespace WebBlog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await postRepository.Remove(id);
-            var commentsListForDelete = new List<Comment>(await commentRepository.Get((commentOfPost) => id == commentOfPost.PostId));
+            await unitOfWork.PostRepository.Remove(id);
+            var commentsListForDelete = new List<Comment>(await unitOfWork.CommentRepository.Get((commentOfPost) => id == commentOfPost.PostId));
             if (commentsListForDelete.Count != 0)
             {
                 foreach (var count in commentsListForDelete)
                 {
-                    await commentRepository.Remove(count.Id);
+                    await unitOfWork.CommentRepository.Remove(count.Id);
                 }
             }
 
@@ -323,16 +318,16 @@ namespace WebBlog.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> PublishPost(int? id)
         {
-            var post = await postRepository.FindById(id);
+            var post = await unitOfWork.PostRepository.FindById(id);
             post.IsConfirmed = true;
-            await postRepository.Update(post);
+            await unitOfWork.PostRepository.Update(post);
 
             return Redirect("~/Admin/IndexUnverifiedPosts");
         }
 
         private async Task<List<PostViewModel>> GetPartPosts(Func<Post, bool> predicate, int skip, int take)
         {
-            var allPosts = (await postRepository.Get(predicate)).ToList();
+            var allPosts = (await unitOfWork.PostRepository.Get(predicate)).ToList();
             allPosts.Sort(new PostsComparer());
 
             var query = allPosts
@@ -361,7 +356,7 @@ namespace WebBlog.Web.Controllers
 
         private async Task<bool> PostExists(int id)
         {
-            return (await postRepository.GetAll()).Any(e => e.Id == id);
+            return (await unitOfWork.PostRepository.GetAll()).Any(e => e.Id == id);
         }
 
 

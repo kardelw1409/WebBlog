@@ -13,24 +13,26 @@ namespace WebBlog.Web.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private IRepository<Post> postRepository;
-        private UserManager<ApplicationUser> userManager;
+        IUnitOfWork unitOfWork;
+        UserManager<ApplicationUser> userManager;
         
-        public AdminController(IRepository<Post> postRepository, UserManager<ApplicationUser> userManager)
+        public AdminController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
         {
-            this.postRepository = postRepository;
             this.userManager = userManager;
+            this.unitOfWork = unitOfWork;
         }
 
-        public IActionResult IndexUsers()
+        public async Task<IActionResult> IndexUsers()
         {
-            
-            return View(userManager.Users);
+            var tempAccount = await userManager.GetUserAsync(User);
+
+            var users = userManager.Users.Where(u => u != tempAccount);
+            return View(users);
         }
 
         public async Task<IActionResult> IndexUnverifiedPosts()
         {
-            var postList = (await postRepository.Get(i => i.IsConfirmed == false)).ToList();
+            var postList = (await unitOfWork.PostRepository.Get(i => i.IsConfirmed == false)).ToList();
             postList.Sort(new PostsComparer());
 
             var postViewList = postList.Select(p => new PostViewModel()

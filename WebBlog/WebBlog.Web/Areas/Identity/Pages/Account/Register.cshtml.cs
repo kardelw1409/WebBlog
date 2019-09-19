@@ -23,21 +23,21 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly IRepository<Category> _categoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IRepository<Category> categoryRepository
+            IUnitOfWork unitOfWork
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [BindProperty]
@@ -88,7 +88,7 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
 
         public async Task OnGet(string returnUrl = null)
         {
-            ViewData["CategoryId"] = new SelectList(await _categoryRepository.GetAll(), "Id", "CategoryName");
+            ViewData["CategoryId"] = new SelectList(await _unitOfWork.CategoryRepository.GetAll(), "Id", "CategoryName");
             ReturnUrl = returnUrl;
         }
 
@@ -135,7 +135,7 @@ namespace WebBlog.Web.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            ViewData["CategoryId"] = new SelectList(await _categoryRepository.GetAll(), "Id", "CategoryName");
+            ViewData["CategoryId"] = new SelectList(await _unitOfWork.CategoryRepository.GetAll(), "Id", "CategoryName");
             // If we got this far, something failed, redisplay form
             return Page();
         }

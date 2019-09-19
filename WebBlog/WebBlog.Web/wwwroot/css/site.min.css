@@ -1,29 +1,88 @@
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
 body {
     padding-top: 50px;
-    padding-bottom: 20px
+    padding-bottom: 20px;
 }
 
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
-    padding-right: 15px
+    padding-right: 15px;
 }
 
+/* Carousel */
 .carousel-caption p {
     font-size: 20px;
-    line-height: 1.4
+    line-height: 1.4;
 }
 
+/* Make .svg files in the carousel display properly in older browsers */
 .carousel-inner .item img[src$=".svg"] {
-    width: 100%
+    width: 100%;
 }
 
+/* QR code generator */
 #qrCode {
-    margin: 15px
+    margin: 15px;
 }
 
-@media screen and (max-width:767px) {
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
     .carousel-caption {
-        display: none
+        display: none;
     }
 }
 
+.container-image {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+/* Bottom left text */
+.bottom-left-image {
+    position: absolute;
+    bottom: 8px;
+    left: auto;
+}
+
+/* Top left text */
+.top-left-image {
+    position: absolute;
+    top: 6px;
+    left: auto;
+}
+
+.light:hover {
+    background: #ebebf1;
+}
+
+.black-white-text {
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.cut-text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 210px;
+    height: 1.6em;
+    white-space: nowrap;
+}
+
+.nav.navbar-nav > li.active a {
+    background: none;
+    background-color: #da212f;
+    color: #fff;
+}
+
+.gray-background {
+    background-color: #c7c5bc;
+}
+
+.admin-controller {
+    background-color: white;
+}

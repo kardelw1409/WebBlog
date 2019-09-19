@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,29 +9,35 @@ namespace WebBlog.ApplicationCore.Repositories
 {
     public class WeatherRepository : ISomeServiceRepository<Weather>
     {
-        HttpClient httpClient;
-        public WeatherRepository()
+        IHttpContextAccessor httpContextAccessor;
+        public WeatherRepository(IHttpContextAccessor httpContextAccessor)
         {
-            httpClient = new HttpClient();
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<Weather> GetData(string ip)
+        public async Task<Weather> GetData()
         {
-            // Didn't returned location
-            var requestString = "https://openweathermap.org/data/2.5/find?q=" + /*"Vitebsk,BY"*/(await GetLocation(ip)) +
+            var ip = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+
+            var requestString = "https://openweathermap.org/data/2.5/find?q=" + (await GetLocation(ip)) +
                 "&type=like&sort=population&cnt=30&appid=b6907d289e10d714a6e88b30761fae22";
+
+            var httpClient = new HttpClient();
             var result = await httpClient.GetStringAsync(requestString);
-            var objects = JsonConvert.DeserializeObject<RootObject>(result);
+
+            var objects = JsonConvert.DeserializeObject<JsonResultList>(result);
+
             var weather = new Weather()
             {
                 CityName = objects?.Weathers[0]?.CityName,
                 KelvinTemperature = objects.Weathers[0].Temperature.TempTemperature,
                 Description = objects.Weathers[0].States[0].Description
             };
+
             return weather;
         }
 
-        private class RootObject
+        private class JsonResultList
         {
             [JsonProperty("list")]
             public List<JsonWeather> Weathers { get; set; }

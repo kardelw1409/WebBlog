@@ -1,11 +1,7 @@
-﻿using Newtonsoft.Json;
-using WebBlog.ApplicationCore.Entities.AbstractEntities;
-
-namespace WebBlog.ApplicationCore.Entities
+﻿namespace WebBlog.ApplicationCore.Entities
 {
-    public class Weather : Entity
+    public class Weather
     {
-        [JsonProperty("name")]
         public string CityName { get; set; }
 
         public string Country { get; set;}

@@ -9,17 +9,17 @@ namespace WebBlog.Web.Controllers
     [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
-        private IRepository<Category> categoryRepository;
+        IUnitOfWork unitOfWork;
 
-        public CategoriesController(IRepository<Category> categoryRepository)
+        public CategoriesController(IUnitOfWork unitOfWork)
         {
-            this.categoryRepository = categoryRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await categoryRepository.GetAll());
+            return View(await unitOfWork.CategoryRepository.GetAll());
         }
 
         // GET: Categories/Create
@@ -35,7 +35,7 @@ namespace WebBlog.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await categoryRepository.Create(category);
+                await unitOfWork.CategoryRepository.Create(category);
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -49,7 +49,7 @@ namespace WebBlog.Web.Controllers
                 return NotFound();
             }
 
-            var category = await categoryRepository.FindById(id);
+            var category = await unitOfWork.CategoryRepository.FindById(id);
             if (category == null)
             {
                 return NotFound();
@@ -63,7 +63,7 @@ namespace WebBlog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await categoryRepository.Remove(id);
+            var category = await unitOfWork.CategoryRepository.Remove(id);
             return RedirectToAction(nameof(Index));
         }
 

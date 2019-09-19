@@ -15,17 +15,17 @@ namespace WebBlog.Web.Controllers
     public class HomeController : Controller
     {
         UserManager<ApplicationUser> userManager;
-        IRepository<Post> postRepository;
+        IUnitOfWork unitOfWork;
         ISomeServiceRepository<Weather> serviceRepository;
-        public HomeController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository, IHttpContextAccessor httpContextAccessor)
+        public HomeController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, ISomeServiceRepository<Weather> serviceRepository)
         {
             this.userManager = userManager;
-            this.postRepository = postRepository;
-            serviceRepository = new WeatherRepository();
+            this.unitOfWork = unitOfWork;
+            this.serviceRepository = serviceRepository;
         }
         public async Task<IActionResult> Index()
         {
-            var postList = (await postRepository.Get(i => i.IsConfirmed == true)).ToList();
+            var postList = (await unitOfWork.PostRepository.Get(i => i.IsConfirmed == true)).ToList();
             postList.Sort(new PostsComparer());
 
             var newList = postList.Select(p => new PostViewModel()
@@ -36,12 +36,9 @@ namespace WebBlog.Web.Controllers
                 PostImage = p.PostImage,
                 UserName = p.User.UserName
             });
-            // This method don'n return real ip.
-            // To Do
-            var ip = Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             try
             {
-                ViewBag.Weather = await serviceRepository.GetData(ip);
+                ViewBag.Weather = await serviceRepository.GetData();
             }
             catch
             {

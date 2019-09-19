@@ -31,7 +31,7 @@ namespace WebBlog.XUnitTests
             Assert.Equal(2, resultList.Count);
         }
 
-        private List<Post> GetTestPosts()
+        public static List<Post> GetTestPosts()
         {
             var testPosts = new List<Post>();
             testPosts.Add(new Post()

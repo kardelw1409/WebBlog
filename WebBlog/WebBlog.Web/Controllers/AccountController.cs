@@ -13,19 +13,19 @@ namespace WebBlog.Web.Controllers
     [Authorize(Roles = "Admin,User")]
     public class AccountController : Controller
     {
-        private UserManager<ApplicationUser> userManager;
-        private IRepository<Post> postRepository;
+        UserManager<ApplicationUser> userManager;
+        IUnitOfWork unitOfWork;
 
-        public AccountController(UserManager<ApplicationUser> userManager, IRepository<Post> postRepository)
+        public AccountController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
         {
             this.userManager = userManager;
-            this.postRepository = postRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public async Task<IActionResult> IndexUserPosts(string id)
         {
-            var postList = await postRepository.Get(i => i.UserId == id);
+            var postList = await unitOfWork.PostRepository.Get(i => i.UserId == id);
             return View(postList);
         }
 
@@ -48,7 +48,7 @@ namespace WebBlog.Web.Controllers
                     {
                         imageData = binaryReader.ReadBytes((int)image.AvatarImage.Length);
                     }
-                    var user = userManager.GetUserAsync(User).Result;
+                    var user = await userManager.GetUserAsync(User);
                     user.AccountImage = imageData;
 
                     await userManager.UpdateAsync(user);
