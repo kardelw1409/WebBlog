@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebBlog.XUnitTests", "WebBl
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AE1D8088-C396-442F-9F36-406FC58D011B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBlog.WebApi", "..\WebBlog.WebApi\WebBlog.WebApi.csproj", "{BEEA1529-BAC7-4281-9995-9304258BF6BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{AE1D8088-C396-442F-9F36-406FC58D011B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE1D8088-C396-442F-9F36-406FC58D011B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE1D8088-C396-442F-9F36-406FC58D011B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEEA1529-BAC7-4281-9995-9304258BF6BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEEA1529-BAC7-4281-9995-9304258BF6BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEEA1529-BAC7-4281-9995-9304258BF6BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEEA1529-BAC7-4281-9995-9304258BF6BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +51,7 @@ Global
 		{DBB39501-E572-4313-ACC7-CF945A2295F6} = {1A803365-4795-44E0-BDD0-E179A018DB13}
 		{5233FCD4-77B0-4E4B-922D-B60BE6D4F76B} = {1A803365-4795-44E0-BDD0-E179A018DB13}
 		{695481A6-823A-455E-80D9-BB98B777401F} = {7C523614-359A-496E-8DE7-65F9208D32AF}
+		{BEEA1529-BAC7-4281-9995-9304258BF6BB} = {1A803365-4795-44E0-BDD0-E179A018DB13}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D51134ED-3A3F-4909-896C-00E06FEEE2B4}
