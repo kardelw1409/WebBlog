@@ -1,0 +1,26 @@
+<div>
+    <ul *ngFor="let p of posts">
+        <hr>
+        <div class="row">
+            <div class="col-sm-4\">
+                <a href="/">
+                    <img class="img-responsive">
+                </a>
+            </div>
+            <div class="col-sm-8">
+                <h3 class= "title">
+                    <a href="/Posts/Details">{{p.title}} 
+                    </a>
+                </h3>
+                <p class="text-muted">
+                    <span class="glyphicon glyphicon-calendar"></span>" {{p.lastModifiedTime}} 
+                </p>
+                <p class="text-muted">Presented by
+                    <a>{{p.userName}}</a>
+                </p>
+            </div>
+        </div>
+    <hr>
+    </ul>
+</div>
+
