@@ -9,27 +9,22 @@ import { Observable } from 'rxjs';
 })
 export class PostHomeItemsComponent implements OnInit {
 
-  private posts : PostModel[];  
+  private posts : PostHomeModel[];  
 
   constructor(private service: PostsService){}
 
   ngOnInit() {
-    this.service.getAll().subscribe((posts : PostModel[]) => {
+    this.service.getAll().subscribe((posts : PostHomeModel[]) => {
       this.posts = posts
     });
   }
 }
 
-export interface PostModel {
+export interface PostHomeModel {
   id: number,
   title: string,
-  content: string,
-  creationTime: Date,
   lastModifiedTime: Date,
-  hasImage: boolean,
-  userId: string,
-  categoryId: number,
+  userName: string,
   postImage: string,
-  isConfirmed: boolean
 }
 

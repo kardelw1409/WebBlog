@@ -13,3 +13,16 @@ export class PostsComponent implements OnInit {
   }
 
 }
+
+export interface PostModel {
+  id: number,
+  title: string,
+  content: string,
+  creationTime: Date,
+  lastModifiedTime: Date,
+  userId: string,
+  userName: string,
+  categoryId: number,
+  categoryName: string,
+  postImage: string
+}

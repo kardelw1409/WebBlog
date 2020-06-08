@@ -26,10 +26,6 @@ namespace WebBlog.ApplicationCore.Repositories
         public async Task<TEntity> Remove(int? id)
         {
             var entityItem = await FindById(id);
-            if (entityItem == null)
-            {
-                throw new NullReferenceException("Data not found.");
-            }
             dbContext.Set<TEntity>().Remove(entityItem);
             await dbContext.SaveChangesAsync();
             return entityItem;
@@ -37,10 +33,6 @@ namespace WebBlog.ApplicationCore.Repositories
 
         public async Task<TEntity> FindById(int? id)
         {
-            if (id == null)
-            {
-                throw new NullReferenceException("id is null.");
-            }
             var entity = await dbContext.Set<TEntity>().FindAsync(id);
             return entity;
         }

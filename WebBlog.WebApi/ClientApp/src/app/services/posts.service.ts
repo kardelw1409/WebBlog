@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
-import { PostModel } from '../components/post-home-items/post-home-items.component';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { PostModel } from '../components/posts/posts.component';
 
 
 @Injectable({
@@ -9,10 +10,14 @@ import { Observable } from 'rxjs';
 })
 export class PostsService {
 
+  private basePostUrl = environment.API_URL +'/api/Posts';
   constructor(private http: HttpClient){}
 
   getAll(): Observable<any>{
-    return this.http.get('https://localhost:44343/api/Posts');
+    return this.http.get(this.basePostUrl);
   }
 
+  getPost(id): Observable<PostModel>{
+    return this.http.get<PostModel>(this.basePostUrl + "/" + id);
+  }
 }

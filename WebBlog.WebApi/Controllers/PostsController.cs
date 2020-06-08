@@ -15,25 +15,25 @@ namespace WebBlog.WebApi.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private PostService _unitOfWork;
+        private PostService _postService;
 
         public PostsController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new PostService(unitOfWork.PostRepository);
+            _postService = new PostService(unitOfWork.PostRepository);
         }
 
         // GET: api/Posts
         [HttpGet]
-        public async Task<IEnumerable<PostHomeModel>> Get()
+        public async Task<IEnumerable<PostModel>> Get()
         {
-            return await _unitOfWork.GetAll();
+            return await _postService.GetPostHomeModels(p => p.IsConfirmed);
         }
 
         // GET: api/Posts/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public async Task<PostModel> Get(int id)
         {
-            return "value";
+            return await _postService.GetPost(id);
         }
 
         // POST: api/Posts

@@ -1,0 +1,25 @@
+<h1>{{post.title}}</h1>
+<h5>{{post.userName}}</h5>
+<h5><em>Last Modified Time: {{post.lastModifiedTime}}</em></h5>
+<div>
+    <hr />
+    <img style='width:900px; height:585px;' src="data:image/jpeg;base64,{{post.postImage}}" />
+    <br>
+    <br>
+    <p class="text-justify">
+        {{post.content}}
+    </p>
+    <br>
+</div>
+<div>
+
+    <!--a class="btn btn-primary" asp-controller="Comment" asp-action="Index" asp-route-id="@ViewBag.Post.Id">Show list
+        comments </a>
+
+    <a class="btn btn-danger" asp-controller="Posts" asp-action="PublishPost" asp-route-id="@ViewBag.Post.Id">Publish an
+        article </a>
+
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@ViewBag.Post.Id">Edit </a>
+
+    <a class="btn btn-primary" asp-action="Index">Back to List</a-->
+</div>

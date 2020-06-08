@@ -13,6 +13,7 @@ import { ContactComponent } from './components/contact/contact.component';
 import { RegisterComponent } from './components/register/register.component';
 import { PostHomeItemsComponent } from './components/post-home-items/post-home-items.component';
 import { PostsService } from './services/posts.service';
+import { PostDetailsComponent } from './components/post-details/post-details.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { PostsService } from './services/posts.service';
     AboutComponent,
     ContactComponent,
     RegisterComponent,
-    PostHomeItemsComponent
+    PostHomeItemsComponent,
+    PostDetailsComponent
   ],
   providers: [PostsService],
   bootstrap: [AppComponent]
